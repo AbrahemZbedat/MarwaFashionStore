@@ -27,15 +27,15 @@
 
 .image-gallery {
     display: flex;
-    flex-wrap: wrap; /* מאפשר לתמונות להתקפל לשורות נוספות אם יש יותר מדי תמונות */
-    gap: 0; /* לא להוסיף מרווחים בין התמונות */
-    justify-content: space-between; /* למתוח את התמונות על כל רוחב ה-DIV */
+    overflow-x: auto; /* מאפשר גלילה אופקית */
+    gap: 10px; /* מרווח בין התמונות */
 }
 
 .image-gallery img {
-    flex: 1 1 calc(33.333% - 10px); /* שליש רוחב ה-DIV פחות מרווח בין התמונות */
-    max-width: 100%; /* למנוע שהתמונות ייצאו מהקונטיינר */
-    margin-bottom: 10px; /* מרווח בין שורות של תמונות */
+    flex: 0 0 auto; /* כל תמונה תהיה בגודל קבוע ולא תתפוס את כל השורה */
+    width: 100px; /* קובע גודל קבוע לרוחב התמונות */
+    height: 100px; /* קובע גודל קבוע לגובה התמונות */
+    object-fit: cover; /* מבטיח שהתמונות יתאימו לממדים שנקבעו */
     border-radius: 10px;
     cursor: pointer; /* ידית על התמונות */
     transition: transform 0.2s; /* מעבר חלק בזמן ריחוף */
@@ -133,26 +133,5 @@ label {
     .btn-primary {
         padding: 10px 15px;
         font-size: 0.9rem;
-    }
-}
-.image-gallery {
-    display: flex;
-    flex-wrap: wrap; /* מאפשר לתמונות להתקפל לשורות נוספות */
-    justify-content: space-around; /* מתפשט את התמונות באופן שווה */
-    gap: 10px; /* מרווח בין התמונות */
-}
-
-.image-gallery img {
-    flex: 1 1 calc(50% - 10px); /* קובע שהתמונות יתפסו חצי רוחב ה-DIV עם מרווח */
-    max-width: 100%; /* למנוע שהתמונות ייצאו מהקונטיינר */
-    margin-bottom: 10px; /* מרווח בין שורות של תמונות */
-    border-radius: 10px;
-    cursor: pointer; /* ידית על התמונות */
-    transition: transform 0.2s; /* מעבר חלק בזמן ריחוף */
-}
-
-@media (min-width: 600px) {
-    .image-gallery img {
-        flex: 1 1 calc(33.333% - 10px); /* שליש רוחב ה-DIV על מסכים רחבים יותר */
     }
 }
