@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='css/bootstrap.css' rel='stylesheet'>
+    <link href="css/home.css" rel="stylesheet">
+    <link href="css/mystyles.css" rel="stylesheet" type="text/css">
+    <link href="css/location.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;500&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <title>LOCATION</title>
+    <link rel="icon" href="imgs/logo.png">
+    </head>
+    <body>
+        <nav>
+            <div class="nav-container">
+                <button id="toggle-menu" class="toggle-button">☰</button>
+                <ul id="nav-links" class="nav-links">
+                    <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> סל קניות</a></li>
+                    <li><a href="contact.html">צור קשר </a></li>
+                    <li><a href="location.html">המיקום שלנו</a></li>
+                    <li><a href="/">דף ראשי</a></li>
+                </ul>
+            </div>
+        </nav>
+        
+        
+        <div id="location" class='container'>
+            <h2>Location</h2><br>
+            <div>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.5146911357465!2d30.057389414754873!3d-1.947099998580468!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca42bf956db27%3A0x4ece45bc16223612!2sM%20Peace%20Plaza!5e0!3m2!1sen!2srw!4v1602582753849!5m2!1sen!2srw" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            </div><br>
+            <div>
+                <p id="address">.אתם יכולים לבוא לבחור את ההזמנות שלכם בחנות שלנו ולעיין בעוד מוצרים שלנו<br>
+                    .החנות שלנו ממוקמת במרכז סכנין, וכבר מוכרת באזור ומושכת לקוחות חדשות כל יום </p>
+            </div>
+          
+                
+               
+        </div><br>
+        <footer>
+            <div class="container">
+               
+                <p id="footer">&copy; כל הזכויות שמורות || אבראהים זבידאת</p>
+      
+            </div>
+        </footer>
+
+
+    </body>
+
+    <script>document.getElementById("toggle-menu").addEventListener("click", function() {
+        const navLinks = document.getElementById("nav-links");
+        navLinks.classList.toggle("active"); // Toggle the 'active' class
+    });
+    </script>
+</html>

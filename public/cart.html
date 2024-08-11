@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/mystyles.css">
+    <link rel="stylesheet" href="css/clothes.css">
+    <link rel="stylesheet" href="css/cart.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+
+    <title>Cart</title>
+</head>
+<body>
+    <header id="cart-header" class="main-header">
+ 
+        <nav>
+            <div class="nav-container">
+                <button id="toggle-menu" class="toggle-button">☰</button>
+                <ul id="nav-links" class="nav-links">
+                    <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> סל קניות <span id="cart-count">0</span></a></li>
+                    <li><a href="contact.html">צור קשר </a></li>
+                    <li><a href="location.html">המיקום שלנו</a></li>
+                    <li><a href="/">דף ראשי</a></li>
+                </ul>
+            </div>
+        </nav>
+        
+    </header>
+
+    <section class="container content-section" id="content-section">
+        <h2 class="section-header">CART</h2>
+        <div class="cart-row">
+            <span class="cart-item cart-header cart-column">פריט</span>
+            <span class="cart-price cart-header cart-column">מחיר</span>
+            <span class="cart-quantity cart-header cart-column">כמות</span>
+        </div>
+        <div class="cart-items">
+            <!-- Cart items will be dynamically inserted here -->
+        </div>
+        <div class="cart-total">
+            <strong class="cart-total-title">Total</strong>
+            <span class="cart-total-price">₪0.00</span>
+        </div>
+        <button id="btn-purchase" class="btn btn-primary btn-purchase" type="button">תשלום</button>
+    </section>
+
+    <footer class="main-footer">
+        <div class="container main-footer-container">
+            <h3 class="band-name text-center">Marwa Fashion Store</h3>
+        </div>
+    </footer>
+
+    <script>
+        function loadCartItems() {
+            const cartItemsContainer = document.querySelector('.cart-items');
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cartItemsContainer.innerHTML = '';
+            
+            cart.forEach((item, index) => {
+                const cartRow = document.createElement('div');
+                cartRow.classList.add('cart-row');
+                cartRow.innerHTML = `
+                    <div class="cart-item cart-column">
+                        <img class="cart-item-image" src="${item.image}" width="100" height="100">
+                        <span class="cart-item-title">${item.title} - ${item.size}, ${item.color}</span>
+                    </div>
+                    <span class="cart-price cart-column">₪${item.price}</span>
+                    <div class="cart-quantity cart-column">
+                        <input class="cart-quantity-input" type="number" value="${item.quantity}" onchange="updateQuantity(${index}, this.value)">
+                        <button class="btn btn-danger" type="button" onclick="removeCartItem(${index})">REMOVE</button>
+                    </div>
+                `;
+                cartItemsContainer.append(cartRow);
+            });
+            updateCartCount();
+            updateTotal();
+        }
+
+        function updateQuantity(index, quantity) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart[index].quantity = parseInt(quantity);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateTotal();
+        }
+
+        function removeCartItem(index) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCartItems();
+        }
+
+        function updateTotal() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+            });
+            document.querySelector('.cart-total-price').textContent = '₪' + total.toFixed(2);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadCartItems);
+
+
+        function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalCount = cart.reduce((count, item) => count + item.quantity, 0);
+    document.getElementById('cart-count').textContent = totalCount > 0 ? `(${totalCount})` : '';
+}
+
+   // Toggle menu functionality
+   document.getElementById("toggle-menu").addEventListener("click", function() {
+            const navLinks = document.getElementById("nav-links");
+            navLinks.classList.toggle("active"); // Toggle the 'active' class
+        });
+
+    </script>
+</body>
+</html>

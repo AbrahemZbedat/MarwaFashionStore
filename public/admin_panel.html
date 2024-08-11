@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="css/adminpanel.css">
+    <script src="admin_panel.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body>
+    <h2>Admin Panel</h2>
+
+    <!-- List of existing items -->
+    <h3>Existing Items</h3>
+    <ul id="itemsList"></ul>
+
+    <!-- Form to add a new item -->
+   <!-- Form to add a new item -->
+<h3>Add New Item</h3>
+<form id="addItemForm">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required><br><br>
+    
+    <label for="price">Price:</label>
+    <input type="text" id="price" name="price" required><br><br>
+
+    <label for="sizes">Sizes (comma separated):</label>
+    <input type="text" id="sizes" name="sizes" required><br><br>
+
+    <label for="colors">Colors (comma separated):</label>
+    <input type="text" id="colors" name="colors" required><br><br>
+
+    <label for="images">Images:</label>
+    <input type="file" id="images" name="images" multiple required><br><br>
+
+    <button type="submit">Add Item</button>
+</form>
+
+<!-- Form to update an existing item -->
+<h3>Update Item</h3>
+<form id="updateItemForm">
+    <label for="id">Item ID:</label>
+    <input type="text" id="id" name="id" required><br><br>
+
+    <label for="updateTitle">New Title:</label>
+    <input type="text" id="updateTitle" name="title"><br><br>
+    
+    <label for="updatePrice">New Price:</label>
+    <input type="text" id="updatePrice" name="price"><br><br>
+
+    <label for="updateSizes">New Sizes (comma separated):</label>
+    <input type="text" id="updateSizes" name="sizes"><br><br>
+
+    <label for="updateColors">New Colors (comma separated):</label>
+    <input type="text" id="updateColors" name="colors"><br><br>
+
+    <label for="updateImages">New Images:</label>
+    <input type="file" id="updateImages" name="images" multiple><br><br>
+
+    <button type="submit">Update Item</button>
+</form>
+
+
+    <!-- Form to delete an item -->
+    <h3>Delete Item</h3>
+    <form id="deleteItemForm">
+        <label for="deleteId">Item ID:</label>
+        <input type="text" id="deleteId" name="id" required><br><br>
+        
+        <button type="submit">Delete Item</button>
+    </form>
+</body>
+</html>

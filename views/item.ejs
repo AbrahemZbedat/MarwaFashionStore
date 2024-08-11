@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/css/mystyles.css">
+    <link rel="stylesheet" href="/css/clothes.css">
+    <link rel="stylesheet" href="/css/item.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <title><%= product.title %></title>
+   
+</head>
+<body>
+    <header class="main-header">
+       <nav>
+    <div class="nav-container">
+        <button id="toggle-menu" class="toggle-button">☰</button>
+        <ul id="nav-links" class="nav-links">
+            <li><a href="/cart.html"><i class="fas fa-shopping-cart"></i> סל קניות</a></li>
+            <li><a href="/contact.html">צור קשר </a></li>
+            <li><a href="/location.html">המיקום שלנו</a></li>
+            <li><a href="/">דף ראשי</a></li>
+        </ul>
+    </div>
+</nav>
+
+    </header>
+    <section class="container content-section">
+        <h2 class="section-header"> <%= product.title %></h2>
+
+        <div class="image-gallery">
+            <% product.images.forEach(image => { %>
+                <img class="shop-item-image" src="/<%= image %>" alt="<%= product.title %>" onclick="showEnlargedImage(this.src)">
+            <% }); %>
+        </div>
+
+        <p class="shop-item-price">₪<%= product.price %></p>
+        
+        <div>
+            <label for="size-select">Choose a size:</label>
+            <select id="size-select" class="shop-item-size">
+                <% product.sizes.forEach(size => { %>
+                    <option value="<%= size %>"><%= size %></option>
+                <% }); %>
+            </select>
+        </div>
+        
+        <div>
+            <label for="color-select">Choose a color:</label>
+            <select id="color-select" class="shop-item-color">
+                <% product.colors.forEach(color => { %>
+                    <option value="<%= color %>"><%= color %></option>
+                <% }); %>
+            </select>
+        </div>
+        
+        <button class="btn btn-primary shop-item-button" type="button" onclick="addToCart()">ADD TO CART</button>
+
+    </section>
+
+    <div class="enlarged-image" id="enlargedImage" onclick="hideEnlargedImage()">
+        <img id="enlargedImageContent" src="" alt="Enlarged Image">
+    </div>
+
+    <footer class="main-footer">
+        <div class="container main-footer-container">
+            <h3 class="band-name text-center">Marwa Fashion Store</h3>
+        </div>
+    </footer>
+    <script>
+        function showEnlargedImage(src) {
+            document.getElementById('enlargedImageContent').src = src;
+            document.getElementById('enlargedImage').style.display = 'flex';
+        }
+
+        function hideEnlargedImage() {
+            document.getElementById('enlargedImage').style.display = 'none';
+        }
+
+        function addToCart() {
+            const size = document.getElementById('size-select').value;
+            const color = document.getElementById('color-select').value;
+            const item = {
+                title: '<%= product.title %>',
+                price: '<%= product.price %>',
+                image: '<%= product.images[0] %>', // Use the first image for the cart
+                size: size,
+                color: color,
+                quantity: 1
+            };
+            
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingItem = cart.find(cartItem => cartItem.title === item.title && cartItem.size === item.size && cartItem.color === item.color);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push(item);
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert('Item added to cart!');
+        }
+
+        /****************/
+        document.getElementById("toggle-menu").addEventListener("click", function() {
+    const navLinks = document.getElementById("nav-links");
+    navLinks.classList.toggle("active"); // Toggle the 'active' class
+});
+
+    </script>
+</body>
+</html>

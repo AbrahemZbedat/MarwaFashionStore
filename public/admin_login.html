@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Admin Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        input[type="password"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .admin-buttons {
+            display: none; /* Hide buttons by default */
+            margin-top: 20px;
+        }
+        .admin-buttons button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+            background-color: #5cb85c;
+            color: white;
+            cursor: pointer;
+        }
+        .admin-buttons button:hover {
+            background-color: #4cae4c;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Admin Login</h2>
+        <form id="adminLoginForm">
+            <input type="password" id="adminPassword" placeholder="Enter admin password" required>
+            <input type="submit" value="Login">
+        </form>
+        <div class="admin-buttons" id="adminButtons">
+            <button id="manageProducts">ניהול מוצרים</button>
+            <button id="viewOrders">הזמנות</button>
+        </div>
+    </div>
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('adminPassword').value;
+
+            fetch('/admin/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('adminButtons').style.display = 'block'; // Show buttons
+                    document.getElementById('adminLoginForm').style.display = 'none'; // Hide form
+                } else {
+                    alert('Incorrect password');
+                }
+            });
+        });
+
+        document.getElementById('manageProducts').addEventListener('click', function() {
+            window.location.href = '/admin_panel.html'; // Redirect to admin panel
+        });
+
+        document.getElementById('viewOrders').addEventListener('click', function() {
+            window.location.href = '/orders.html'; // Redirect to orders page (שנה לכתובת המתאימה)
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+h3 {
+    color: #4CAF50;
+    margin-bottom: 15px;
+    font-size: 22px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 30px;
+}
+
+ul li {
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="text"],
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Mobile styles */
+@media (max-width: 600px) {
+    body {
+        padding: 10px; /* Reduce padding on mobile */
+    }
+
+    h2 {
+        font-size: 24px; /* Smaller font size for headings */
+    }
+
+    h3 {
+        font-size: 20px; /* Smaller font size for subheadings */
+    }
+
+    form {
+        padding: 15px; /* Reduce padding in form */
+    }
+
+    button {
+        width: 100%; /* Full width buttons on mobile */
+        padding: 10px; /* Adjust button padding */
+        font-size: 14px; /* Smaller font size for buttons */
+    }
+}

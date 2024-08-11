@@ -1,0 +1,16 @@
+[
+    {
+        "title": "Brouse",
+        "image": "imgs/clothes/brouse.jpg",
+        "price": "10000",
+        "sizes": ["S", "M", "L"],
+        "colors": ["Red", "Blue"]
+    },
+    {
+        "title": "Version Neck",
+        "image": "imgs/clothes/vneck.jpg",
+        "price": "26000",
+        "sizes": ["S", "M", "L"],
+        "colors": ["Black", "White"]
+    }
+]

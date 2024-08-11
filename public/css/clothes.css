@@ -1,0 +1,401 @@
+* {
+  box-sizing: border-box;
+  color: rgb(160, 158, 158);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+/*************************/
+
+h1 {
+  font-family: 'Chilanka', cursive;
+  padding-top: 60px;
+}
+
+h1 strong {
+  color: yellow;
+}
+
+.nav ul {
+  margin: 5px;
+}
+
+.nav li {
+  display: list-item;
+}
+
+.nav a {
+  display: inline-block;
+  padding: .9em;
+  color: white;
+  text-decoration: none;
+}
+
+.main-nav {
+  text-align: center;
+  font-size: 1.1em;
+  font-weight: lighter;
+  border-bottom: 1px solid rgba(255, 255, 255, .3);
+}
+
+.main-nav li {
+  padding: 0 5%;
+}
+
+.nav a:hover {
+  background-color: rgba(255, 255, 255, .3);
+}
+
+.main-header {
+  background-image: url("Images/defense1.jpg");
+  height: 600px;
+  background-size: 33%;
+}
+
+#cart-header {
+  background-image: none;
+  height: 600px;
+  background-size: 33%;
+}
+
+.band-name {
+  text-align: center;
+  margin: 0;
+  font-size: 4em;
+  font-weight: normal;
+  color: white;
+}
+
+.band-name-large {
+  font-size: 8em;
+}
+
+.content-section {
+  margin: 1em;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5em;
+}
+
+.section-header {
+  font-family: "Metal Mania";
+  font-weight: normal;
+  color: rgb(126, 78, 78);
+  text-align: center;
+  font-size: 2.5em;
+}
+
+.btn {
+  text-align: center;
+  padding: .67em .67em;
+  cursor: pointer;
+}
+
+.btn-primary {
+  color: white;
+  background-color: #56CCF2;
+  border: none;
+  border-radius: .3em;
+  font-weight: bold;
+  margin: 10px;
+}
+
+.btn-primary:hover {
+  background-color: #34454e;
+}
+
+.men {
+  background-color: rgba(54, 29, 29, 0.2);
+  background-size: contain;
+}
+
+.women {
+  background-color: rgba(231, 215, 147, 0.6);
+}
+
+.shop-item {
+  margin: 40px;
+}
+
+.shop-item-title {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.5em;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.shop-item-image {
+  height: 250px;
+  max-width: 240px;
+}
+
+.shop-item-details {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  margin-top: 15px;
+}
+
+.shop-item-details .btn {
+  margin: auto;
+}
+
+.shop-item-price {
+  text-align: center;
+  color: chocolate;
+  font-size: 1.3em;
+  margin-bottom: 0;
+  height: 2px;
+  margin-top: 0;
+}
+
+.shop-item-price b {
+  text-align: center;
+  color: chocolate;
+}
+
+.shop-items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.cart-header {
+  font-weight: bolder;
+  font-size: 1.25em;
+  color: #333;
+}
+
+.cart-column {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid black;
+  margin-right: 1.5em;
+  padding-bottom: 10px;
+  margin-top: 20px;
+}
+
+.cart-row {
+  display: flex;
+}
+
+.cart-item {
+  width: 45%;
+}
+
+.cart-price {
+  width: 20%;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.cart-quantity {
+  width: 35%;
+}
+
+.cart-item-title {
+  color: #333;
+  margin-left: .5em;
+  font-size: 1.2em;
+}
+
+.cart-item-image {
+  width: 75px;
+  height: auto;
+  border-radius: 10px;
+}
+
+.btn-danger {
+  color: white;
+  background-color: #7a4040;
+  border: none;
+  border-radius: .3em;
+  font-weight: bold;
+}
+
+.btn-danger:hover {
+  background-color: #494558;
+}
+
+.cart-quantity-input {
+  height: 34px;
+  width: 50px;
+  border-radius: 5px;
+  border: 1px solid #56CCF2;
+  background-color: #eee;
+  color: #333;
+  padding: 0;
+  text-align: center;
+  font-size: 1.2em;
+  margin-right: 25px;
+}
+
+.cart-row:last-child {
+  border-bottom: 1px solid rgb(7, 7, 7);
+}
+
+.cart-row:last-child .cart-column {
+  border: none;
+}
+
+.cart-total {
+  text-align: end;
+  margin-top: 20px;
+  margin-right: 40px;
+}
+
+.cart-total-title {
+  font-weight: bold;
+  font-size: 1.5em;
+  color: black;
+  margin-right: 20px;
+}
+
+.cart-total-price {
+  color: #333;
+  font-size: 2.1em;
+}
+
+.btn-purchase {
+  display: block;
+  margin: 40px auto 80px auto;
+  font-size: 1.35em;
+}
+
+.main-footer {
+  background-color: rgba(0, 0, 0, .6);
+  color: white;
+  padding: .20em 0;
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+  .main-header {
+    height: auto; /* Allow height to adjust */
+    background-size: cover; /* Cover the entire header */
+  }
+
+  .band-name {
+    font-size: 3em; /* Reduce font size for mobile */
+  }
+
+  .shop-item {
+    margin: 20px 0; /* Reduce margins for mobile */
+  }
+
+  .shop-item-image {
+    max-width: 100%; /* Ensure images are responsive */
+    height: auto;
+  }
+
+  .cart-row {
+    flex-direction: column; /* Stack cart items vertically */
+    align-items: flex-start; /* Align items to the start */
+  }
+
+  .cart-item {
+    width: 100%; /* Full width for mobile */
+  }
+
+  .cart-price {
+    width: 100%; /* Full width for mobile */
+    text-align: left; /* Align text to the left */
+  }
+
+  .cart-quantity {
+    width: 100%; /* Full width for mobile */
+    text-align: left; /* Align text to the left */
+  }
+
+  .btn-purchase {
+    width: 100%; /* Full width for mobile */
+  }
+
+  .women {
+    background-color: rgb(246, 244, 238);
+  }
+}
+nav {
+  background-color: #333; /* Dark background color */
+  width: 100%; /* Full width for the navigation */
+}
+
+.nav-container {
+  display: flex;
+  justify-content: flex-end; /* Align items to the right */
+  align-items: center; /* Center items vertically */
+  padding: 10px 15px; /* Padding for the nav container */
+}
+
+.toggle-button {
+  display: none; /* Hidden by default */
+  background-color: #333; /* Dark background */
+  color: white; /* White text */
+  border: none; /* No border */
+  font-size: 24px; /* Size of the icon */
+  cursor: pointer; /* Pointer cursor */
+  margin-right: auto; /* Push links to the right */
+}
+
+.nav-links {
+  list-style: none; /* Remove default list styles */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+  display: flex; /* Horizontal layout for desktop */
+}
+
+.nav-links li {
+  margin: 0 15px; /* Space between items */
+}
+
+.nav-links a {
+  color: #fff; /* White text color */
+  text-decoration: none; /* Remove underline */
+  font-size: 18px; /* Font size for links */
+  transition: color 0.3s; /* Smooth color transition */
+}
+
+.nav-links a:hover {
+  color: #f39c12; /* Change color on hover */
+}
+
+/* Mobile Styles */
+@media only screen and (max-width: 800px) {
+  .toggle-button {
+      display: block; /* Show toggle button on mobile */
+      margin-right: auto; /* Push toggle button to the left */
+  }
+
+  .nav-links {
+      display: none; /* Hide links by default */
+      flex-direction: column; /* Stack items vertically */
+      background-color: #333; /* Same background for the dropdown */
+      position: absolute; /* Position absolute to avoid pushing other elements */
+      top: 50px; /* Position below the toggle button */
+      left: 0; /* Align to the left */
+      width: 100%; /* Full width */
+      z-index: 1000; /* Ensure it's on top */
+  }
+
+  .nav-links.active {
+      display: flex; /* Show links when active */
+  }
+
+  .nav-links li {
+      margin: 10px 0; /* Space between items vertically */
+      text-align: center; /* Center the text */
+  }
+
+
+}
+

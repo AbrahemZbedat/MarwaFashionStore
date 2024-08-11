@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Rimba Fashion Store</title>
+    <link rel="stylesheet" href="css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="/css/clothes.css">
+    <link rel="stylesheet" href="/css/mystyles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+   
+    <script src="index.js" defer > </script>
+    <link rel="icon" href="imgs/logo.png">
+</head>
+<body>
+    <header class="main-header">
+        <nav>
+            <div class="nav-container">
+                <button id="toggle-menu" class="toggle-button">☰</button>
+                <ul id="nav-links" class="nav-links">
+                    <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> סל קניות</a></li>
+                    <li><a href="contact.html">צור קשר </a></li>
+                    <li><a href="location.html">המיקום שלנו</a></li>
+                    <li><a href="/">דף ראשי</a></li>
+                </ul>
+            </div>
+        </nav>
+
+             
+        
+    </header>
+
+    <section class="container content-section women">
+        <h2 class="section-header">FEMALE CLOTHES</h2>
+        <div class="shop-items">
+            <% products.forEach(product => { %>
+                <div class="shop-item">
+                    <span class="shop-item-title"><%= product.title %></span>
+                    <img class="shop-item-image" src="/<%= product.images[0] %>" alt="<%= product.title %>" onclick="location.href='/item/<%= product.id %>'">
+                    <p class="shop-item-price"> <b>  ₪<%= product.price %>  </b> </p>
+                    <div class="shop-item-details">
+                        <button class="btn btn-primary shop-item-button" type="button" onclick="location.href='/item/<%= product.id %>'">VIEW DETAILS</button><br>
+                        <a href="cart.html"><button class="btn btn-primary shop-item-button">VIEW CART</button></a>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </section>
+    
+    
+    <footer class="main-footer">
+        <div class="container main-footer-container">
+            <h3 class="band-name text-center">Marwa Fashion Store</h3>
+            
+        </div>
+    </footer>
+ <!-- Admin Login Button -->
+ <div style="position: fixed; bottom: 20px; left: 20px;">
+    <a href="admin_login.html">
+        <button class="btn btn-danger">כניסת מנהל</button>
+    </a>
+</div>
+</body>
+<script>   // Toggle menu functionality
+    document.getElementById("toggle-menu").addEventListener("click", function() {
+     const navLinks = document.getElementById("nav-links");
+     navLinks.classList.toggle("active"); // Toggle the 'active' class
+ });</script>
+</html>
+
+<style> 
+
+.nav-container {
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+    align-items: center; /* Center items vertically */
+    padding: 10px 15px; /* Padding for the nav container */
+}
+
+.toggle-button {
+    display: none; /* Hidden by default */
+    background-color: #333; /* Dark background */
+    color: white; /* White text */
+    border: none; /* No border */
+    font-size: 24px; /* Size of the icon */
+    cursor: pointer; /* Pointer cursor */
+    margin-right: auto; /* Push links to the right */
+}
+
+.nav-links {
+    list-style: none; /* Remove default list styles */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+    display: flex; /* Horizontal layout for desktop */
+}
+
+.nav-links li {
+    margin: 0 15px; /* Space between items */
+}
+
+.nav-links a {
+    color: #fff; /* White text color */
+    text-decoration: none; /* Remove underline */
+    font-size: 18px; /* Font size for links */
+    transition: color 0.3s; /* Smooth color transition */
+}
+
+.nav-links a:hover {
+    color: #f39c12; /* Change color on hover */
+}
+
+
+/* Mobile Styles */
+@media only screen and (max-width: 800px) {
+    .toggle-button {
+        display: block; /* Show toggle button on mobile */
+        margin-right: auto; /* Push toggle button to the left */
+    }
+
+    .nav-links {
+        display: none; /* Hide links by default */
+        flex-direction: column; /* Stack items vertically */
+        background-color: #333; /* Same background for the dropdown */
+        position: absolute; /* Position absolute to avoid pushing other elements */
+        top: 50px; /* Position below the toggle button */
+        left: 0; /* Align to the left */
+        width: 100%; /* Full width */
+        z-index: 1000; /* Ensure it's on top */
+    }
+
+
+
+    .nav-links.active {
+        display: flex; /* Show links when active */
+    }
+
+    .nav-links li {
+        margin: 10px 0; /* Space between items vertically */
+        text-align: center; /* Center the text */
+    }
+    /*
+    .main-header {
+    background-image: url("/Images/defense1.jpg");
+    height: 400px; /* גובה מותאם */
+   /* background-size: cover; /* ודא שהתמונה מכסה את המקטע */
+   /* background-position: center; /* מרכז את התמונה */
+/*}
+
+} */ 
+}
+</style>

@@ -1,0 +1,138 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.card-img-top {
+    height: 200px;
+}
+
+#about-us, #location, #contact, h2 {
+    text-align: center;
+    margin-top: 80px;
+    font-family: "Metal Mania";
+}
+
+#owners {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
+    grid-gap: 20px;
+}
+
+nav {
+    width: 100%;
+    text-align: right;
+    position: fixed;
+    align-items: center;
+    z-index: 2;
+    top: 0;
+    padding: 10px 50px;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.6);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.3em;
+    height: 75px;
+}
+
+nav li {
+    list-style: none;
+    display: inline-block;
+    margin-right: 80px;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    padding: 10px 15px;
+}
+
+nav a:hover {
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+    background-color: white;
+}
+
+#contact-us {
+    margin-top: 80px;
+}
+
+form {
+    width: 80%;
+    margin: 0 auto; /* Center form on the page */
+}
+
+.social-icons {
+    text-align: center;
+    background-color: rgb(223, 219, 19);
+    margin-bottom: -10px;
+}
+
+.social-icons i {
+    padding: 20px 120px;
+    color: white;
+    height: 20px;
+}
+
+footer {
+    margin-top: -10px;
+    padding-bottom: 5px;
+    background-color: rgb(68, 68, 68);
+    color: white;
+    text-align: center;
+}
+
+#contact {
+    font-size: 16px;
+}
+
+#contact i {
+    color: gray;
+}
+
+#contact a {
+    text-decoration: none;
+    color: white;
+}
+
+#address {
+    font: 1em sans-serif;
+}
+
+/* Responsive Styles */
+@media only screen and (max-width: 800px) {
+    nav {
+        text-align: center;
+    }
+
+    nav ul {
+        margin-right: 5px;
+    }
+
+    #owners {
+        grid-template-columns: 1fr; /* Stack items on small screens */
+    }
+
+    .card-img-top {
+        height: 70vh; /* Adjust image height for mobile */
+    }
+
+    #about, #address {
+        text-align: left;
+    }
+
+    form {
+        width: 90%; /* Slightly wider on mobile */
+    }
+
+    nav li {
+        margin-right: 20px; /* Reduce margin for mobile */
+    }
+
+    nav a {
+        padding: 10px; /* Adjust padding for mobile */
+    }
+
+    .social-icons i {
+        padding: 10px; /* Adjust padding for social icons on mobile */
+    }
+}

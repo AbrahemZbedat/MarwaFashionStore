@@ -1,0 +1,158 @@
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.main-header {
+    max-height: 200px;
+}
+
+.content-section {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 900px;
+    margin: 40px auto;
+}
+
+.section-header {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.image-gallery {
+    display: flex;
+    flex-wrap: wrap; /* מאפשר לתמונות להתקפל לשורות נוספות אם יש יותר מדי תמונות */
+    gap: 0; /* לא להוסיף מרווחים בין התמונות */
+    justify-content: space-between; /* למתוח את התמונות על כל רוחב ה-DIV */
+}
+
+.image-gallery img {
+    flex: 1 1 calc(33.333% - 10px); /* שליש רוחב ה-DIV פחות מרווח בין התמונות */
+    max-width: 100%; /* למנוע שהתמונות ייצאו מהקונטיינר */
+    margin-bottom: 10px; /* מרווח בין שורות של תמונות */
+    border-radius: 10px;
+    cursor: pointer; /* ידית על התמונות */
+    transition: transform 0.2s; /* מעבר חלק בזמן ריחוף */
+}
+
+.image-gallery img:hover {
+    transform: scale(1.05); /* הגדלת התמונה בריחוף */
+}
+
+.shop-item-price {
+    font-size: 1.5rem;
+    color: #ff6f61;
+    margin-bottom: 20px;
+}
+
+.shop-item-size,
+.shop-item-color {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.shop-item-size:focus,
+.shop-item-color:focus {
+    border-color: #ff6f61;
+    outline: none;
+}
+
+label {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+    display: block;
+    text-align: left;
+}
+
+.btn-primary {
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #ff3c2f;
+}
+
+.enlarged-image {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+.enlarged-image img {
+    max-width: 80%;
+    max-height: 80%;
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+
+    .content-section {
+        padding: 20px;
+    }
+
+    .section-header {
+        font-size: 1.5rem;
+    }
+
+    .shop-item-image {
+        max-width: 100%;
+    }
+
+    .shop-item-price {
+        font-size: 1.2rem;
+    }
+
+    .btn-primary {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+}
+.image-gallery {
+    display: flex;
+    flex-wrap: wrap; /* מאפשר לתמונות להתקפל לשורות נוספות */
+    justify-content: space-around; /* מתפשט את התמונות באופן שווה */
+    gap: 10px; /* מרווח בין התמונות */
+}
+
+.image-gallery img {
+    flex: 1 1 calc(50% - 10px); /* קובע שהתמונות יתפסו חצי רוחב ה-DIV עם מרווח */
+    max-width: 100%; /* למנוע שהתמונות ייצאו מהקונטיינר */
+    margin-bottom: 10px; /* מרווח בין שורות של תמונות */
+    border-radius: 10px;
+    cursor: pointer; /* ידית על התמונות */
+    transition: transform 0.2s; /* מעבר חלק בזמן ריחוף */
+}
+
+@media (min-width: 600px) {
+    .image-gallery img {
+        flex: 1 1 calc(33.333% - 10px); /* שליש רוחב ה-DIV על מסכים רחבים יותר */
+    }
+}
