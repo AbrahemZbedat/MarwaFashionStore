@@ -237,6 +237,114 @@ margin: 10px;
     }
 }
 
+/***********************/
+@media (max-width: 844px) {
+    .shop-items {
+        display: flex; /* Use flexbox layout */
+        flex-wrap: wrap; /* Allow wrapping to the next line */
+        justify-content: space-between; /* Space items evenly */
+    }
+
+    .shop-item {
+        width: 48%; /* Adjust width to fit two items per row */
+        margin: 1%; /* Add margin between items */
+        box-sizing: border-box; /* Ensure padding doesn't affect width */
+        text-align: center; /* Center-align the text */
+        display: flex; /* Use flexbox for item */
+        flex-direction: column; /* Stack elements vertically */
+        align-items: center; /* Center-align the content */
+    }
+
+    .shop-item-image {
+        width: 97%; /* Ensure the image takes the full width of the container */
+        height: 155px; /* Set a fixed height for all images */
+       
+    }
+
+    .shop-item-title,
+    .shop-item-price {
+        margin: 10px 0; /* Space between title/price and other elements */
+        font-size: 1.0em;
+    }
+
+    .shop-item-details {
+        margin-top: 0px; /* Space above the button */
+        width: 97%; /* Ensure the details section takes full width */
+     margin-right: 170px;
+        
+      
+    }
+
+}
+
+
+@media (max-width: 1024px) {
+
+
+
+    .shop-item-details {
+        margin-top: 0px; /* Space above the button */
+        width: 97%; /* Ensure the details section takes full width */
+        
+    }
+
+}
+
+
+
+@media (max-width: 768px) {
+
+
+
+.shop-item-details {
+    margin-top: 0px; /* Space above the button */
+    width: 97%; /* Ensure the details section takes full width */
+    margin-right: 30px;
+}
+
+}
+
+
+
+
+
+
+@media (max-width: 900px) {
+
+
+
+.shop-item-details {
+    margin-top: 0px; /* Space above the button */
+    width: 97%; /* Ensure the details section takes full width */
+    margin-left: 100px;
+}
+
+}
+
+@media (max-width: 400px) {
+
+
+
+.shop-item-details {
+    margin-top: 0px; /* Space above the button */
+    width: 97%; /* Ensure the details section takes full width */
+    margin-left: 86px;
+}
+
+}
+
+@media (max-width: 360px) {
+
+
+
+.shop-item-details {
+    margin-top: 0px; /* Space above the button */
+    width: 97%; /* Ensure the details section takes full width */
+    margin-left: 70px;
+}
+
+}
+
 
 
 </style>
