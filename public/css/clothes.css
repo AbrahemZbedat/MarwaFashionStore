@@ -137,6 +137,8 @@ h1 strong {
 .shop-item-image {
   height: 250px;
   max-width: 240px;
+  cursor:grab;
+  border-radius: 20px;
 }
 
 .shop-item-details {
