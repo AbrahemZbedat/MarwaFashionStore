@@ -215,6 +215,11 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
+app.get('/cart.html', (req, res) => {
+    res.render('cart'); // ודא שיש לך קובץ cart.ejs (או cart.pug) בתיקיית views
+});
+
+
 // הפעלת השרת
 app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');
