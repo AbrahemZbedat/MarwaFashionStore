@@ -1,5 +1,6 @@
 [
     {
+        "id": 1,
         "title": "Brouse",
         "image": "imgs/clothes/brouse.jpg",
         "price": "10000",
@@ -7,6 +8,7 @@
         "colors": ["Red", "Blue"]
     },
     {
+        "id": 2,
         "title": "Version Neck",
         "image": "imgs/clothes/vneck.jpg",
         "price": "26000",

@@ -65,11 +65,15 @@
 
     <!-- Form to delete an item -->
     <h3>Delete Item</h3>
-    <form id="deleteItemForm">
+    <form id="deleteItemForm" method="POST" action="/delete-item">
         <label for="deleteId">Item ID:</label>
         <input type="text" id="deleteId" name="id" required><br><br>
         
         <button type="submit">Delete Item</button>
     </form>
+    
+
+   
+    
 </body>
 </html>

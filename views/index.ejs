@@ -42,8 +42,8 @@
                     <img class="shop-item-image" src="/<%= product.images[0] %>" alt="<%= product.title %>" onclick="location.href='/item/<%= product.id %>'">
                     <p class="shop-item-price"> <b>  ₪<%= product.price %>  </b> </p>
                     <div class="shop-item-details">
-                        <button class="btn btn-primary shop-item-button" type="button" onclick="location.href='/item/<%= product.id %>'">VIEW DETAILS</button><br>
-                        <a href="cart.html"><button class="btn btn-primary shop-item-button">VIEW CART</button></a>
+                        <button id="view-details" class="btn btn-primary shop-item-button" type="button" onclick="location.href='/item/<%= product.id %>'">VIEW DETAILS</button><br>
+                        <a href="cart.html"><button id="view-cart" class="btn btn-primary shop-item-button">VIEW CART</button></a>
                     </div>
                 </div>
             <% }); %>
@@ -51,6 +51,8 @@
     </section>
     
     
+
+
     <footer class="main-footer">
         <div class="container main-footer-container">
             <h3 class="band-name text-center">Marwa Fashion Store</h3>
@@ -113,6 +115,15 @@
 }
 
 
+.shop-item-details {
+
+
+}
+.shop-item-details .btn {
+
+margin: 7px;
+
+}
 /* Mobile Styles */
 @media only screen and (max-width: 800px) {
     .toggle-button {
@@ -152,11 +163,78 @@
 } */ 
 .shop-item-details {
 
-margin-left: 45px;
+margin-left: 50px;
 }
 .shop-item-details .btn {
 
 margin: 10px;
+
 }
 }
+
+/**********************/
+
+
+
+@media (max-width: 600px) {
+    .shop-items {
+        display: flex; /* Use flexbox layout */
+        flex-wrap: wrap; /* Allow wrapping to the next line */
+        justify-content: space-between; /* Space items evenly */
+    }
+
+    .shop-item {
+        width: 48%; /* Adjust width to fit two items per row */
+        margin: 1%; /* Add margin between items */
+        box-sizing: border-box; /* Ensure padding doesn't affect width */
+        text-align: center; /* Center-align the text */
+        display: flex; /* Use flexbox for item */
+        flex-direction: column; /* Stack elements vertically */
+        align-items: center; /* Center-align the content */
+    }
+
+    .shop-item-image {
+        width: 97%; /* Ensure the image takes the full width of the container */
+        height: 155px; /* Set a fixed height for all images */
+       
+    }
+
+    .shop-item-title,
+    .shop-item-price {
+        margin: 10px 0; /* Space between title/price and other elements */
+        font-size: 1.0em;
+    }
+
+    .shop-item-details {
+        margin-top: 0px; /* Space above the button */
+        width: 100%; /* Ensure the details section takes full width */
+        margin-right: 5px;
+    }
+
+    .shop-item-details .btn {
+        margin: 0; /* Remove margin for better alignment */
+        padding: 9px 10px; /* Adjust padding for a smaller button */
+        font-size: 0.5em; /* Adjust text size to be smaller */
+        width: auto; /* Set width to auto for better sizing */
+        box-sizing: border-box; /* Ensure padding doesn't affect button size */
+        border: none; /* No border */
+        border-radius: 4px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor */
+    }
+
+    #view-cart {
+        display: none; /* Hide the "View Cart" button */
+    }
+
+    .shop-item-button {
+        display: none; /* Hide all buttons first */
+    }
+
+    #view-details {
+        display: block; /* Show only "VIEW DETAILS" button */
+    }
+}
+
+
+
 </style>

@@ -156,13 +156,31 @@ app.post('/update-item', upload.array('images', 10), (req, res) => {
     }
 });
 
+// Get all items
+app.get('/get-items', (req, res) => {
+    res.json(products);
+});
 
 // Delete item
-app.post('/delete-item', (req, res) => {
-    const { id } = req.body;
-    products = products.filter(p => p.id !== parseInt(id));
-    res.json({ message: 'Item deleted successfully' });
+// Delete item
+// Delete item
+app.delete('/delete-item', (req, res) => {
+    const { id } = req.body; // קח את ה-ID מהבקשה
+
+    // מצא את האינדקס של הפריט
+    const index = products.findIndex(p => p.id === parseInt(id));
+    
+    if (index !== -1) {
+        products.splice(index, 1); // מחק את הפריט
+        res.json({ message: 'Item deleted successfully' });
+    } else {
+        res.status(404).json({ message: 'Item not found' });
+    }
 });
+
+
+
+
 //end admin panel section
 /******************************************************************************************************************** */
 
