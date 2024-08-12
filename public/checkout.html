@@ -3,76 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rimba Fashion Store</title>
+    <link rel="stylesheet" href="css/mystyles.css">
     <link rel="stylesheet" href="css/checkout.css">
-    
+    <title>Checkout</title>
+
+    <style>
+      body {
+          direction: rtl; /* Set direction to right-to-left */
+      }
+      .container {
+          text-align: right; /* Align text to the right */
+          max-width: 600px; /* Limit the width for better readability */
+          margin: 0 auto; /* Center the container */
+      }
+      .checkout-form label, .checkout-form h3 {
+          display: block; /* Ensure labels and headings are block elements */
+          margin-bottom: 8px; /* Add space between elements */
+          
+      }
+      .checkout-form input, .checkout-form select {
+          width: 90%; /* Full width for inputs and select */
+          margin-bottom: 16px; /* Space below inputs */
+          padding: 8px; /* Padding for inputs */
+      }
+      .main-footer {
+          text-align: center; /* Center the footer content */
+      }
+  </style>
 </head>
 <body>
-    <div class="row">
-        <div class="col-75">
-          <div class="container">
-            <form action="/action_page.php">
-      
-              <div class="row">
-                <div class="col-50">
-                  <h3>Billing Address</h3>
-                  <label for="fname"><i class="fa fa-user"></i> Full Name</label>
-                  <input type="text" id="fname" name="firstname" placeholder="John M. Doe">
-                  <label for="email"><i class="fa fa-envelope"></i> Email</label>
-                  <input type="text" id="email" name="email" placeholder="john@example.com">
-                  <label for="adr"><i class="fa fa-address-card-o"></i> Address</label>
-                  <input type="text" id="adr" name="address" placeholder="542 W. 15th Street">
-                  <label for="city"><i class="fa fa-institution"></i> City</label>
-                  <input type="text" id="city" name="city" placeholder="New York">
-      
-                  <div class="row">
-                    <div class="col-50">
-                      <label for="state">State</label>
-                      <input type="text" id="state" name="state" placeholder="NY">
-                    </div>
-                    <div class="col-50">
-                      <label for="zip">Zip</label>
-                      <input type="text" id="zip" name="zip" placeholder="10001">
-                    </div>
-                  </div>
-                </div>
-      
-                <div class="col-50">
-                  <h3>Payment</h3>
-                  <label for="fname">Accepted Cards</label>
-                  <div class="icon-container">
-                    <i class="fa fa-cc-visa" style="color:navy;"></i>
-                    <i class="fa fa-cc-amex" style="color:blue;"></i>
-                    <i class="fa fa-cc-mastercard" style="color:red;"></i>
-                    <i class="fa fa-cc-discover" style="color:orange;"></i>
-                  </div>
-                  <label for="cname">Name on Card</label>
-                  <input type="text" id="cname" name="cardname" placeholder="John More Doe">
-                  <label for="ccnum">Credit card number</label>
-                  <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
-                  <label for="expmonth">Exp Month</label>
-                  <input type="text" id="expmonth" name="expmonth" placeholder="September">
-      
-                  <div class="row">
-                    <div class="col-50">
-                      <label for="expyear">Exp Year</label>
-                      <input type="text" id="expyear" name="expyear" placeholder="2018">
-                    </div>
-                    <div class="col-50">
-                      <label for="cvv">CVV</label>
-                      <input type="text" id="cvv" name="cvv" placeholder="352">
-                    </div>
-                  </div>
-                </div>
-      
-              </div>
-              <label>
-                <input type="checkbox" checked="checked" name="sameadr"> Shipping address same as billing
-              </label>
-              <button class="checkout" type="button">Checkout</button>
-            </form>
-          </div>
+    <header class="main-header">
+        <nav>
+            <div class="nav-container">
+       
+                <ul id="nav-links" class="nav-links">
+                  <li><a href="/">דף ראשי</a></li>
+                    <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> סל קניות</a></li>
+                    <li><a href="contact.html">צור קשר</a></li>
+                    <li><a href="location.html">המיקום שלנו</a></li>
+                   
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <section class="container content-section">
+        <h2 class="section-header">Checkout</h2>
+        <div class="checkout-form">
+            <h3>פרטים אישיים</h3>
+            <label for="name">שם מלא</label>
+            <input type="text" id="name" required>
+            
+            <label for="email">אימייל</label>
+            <input type="email" id="email" required>
+            
+            <label for="phone">מספר טלפון</label>
+            <input type="text" id="phone" required>
+            
+            <h3>כתובת למשלוח</h3>
+            <label for="address">כתובת</label>
+            <input type="text" id="address" required>
+            
+            <label for="city">עיר</label>
+            <input type="text" id="city" required>
+            
+            <label for="postal-code">מיקוד</label>
+            <input type="text" id="postal-code" required>
+            
+            <h3>אמצעי תשלום</h3>
+            <label for="payment-method">בחר שיטת תשלום</label>
+            <select id="payment-method" required>
+              <option value="cash">מזומן לשליח</option>
+                <option value="credit">כרטיס אשראי</option>
+             
+            </select>
+
+            <div id="credit-card-details" style="display: none;">
+                <label for="card-name">שם על הכרטיס</label required>
+                <input type="text" id="card-name">
+                
+                <label for="card-number">מספר כרטיס</label required>
+                <input type="text" id="card-number">
+                
+                <label for="card-expiry">תוקף הכרטיס</label required>
+                <input type="date" id="card-expiry">
+                
+                <label for="card-cvv">CVV</label required>
+                <input type="text" id="card-cvv">
+            </div>
+
+            <h3>סיכום הזמנה</h3>
+            <p>סה"כ לתשלום: <span id="order-total-price">₪0.00</span></p>
+
+            <button id="place-order-btn" type="button" onclick="placeOrder()">בצע הזמנה</button>
         </div>
-      </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="container main-footer-container">
+            <h3 class="band-name text-center">Marwa Fashion Store</h3>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const paymentMethodSelect = document.getElementById('payment-method');
+            const creditCardDetails = document.getElementById('credit-card-details');
+            
+            paymentMethodSelect.addEventListener('change', function() {
+                if (this.value === 'credit') {
+                    creditCardDetails.style.display = 'block';
+                } else {
+                    creditCardDetails.style.display = 'none';
+                }
+            });
+
+            const orderTotalPrice = localStorage.getItem('cartTotal');
+            document.getElementById('order-total-price').textContent = '₪' + orderTotalPrice;
+
+        });
+        function placeOrder() {
+    // בדוק אם שיטת התשלום היא כרטיס אשראי
+    const paymentMethod = document.getElementById('payment-method').value;
+    if (paymentMethod === 'credit') {
+        // ודא שכל שדות פרטי האשראי מולאו
+        const cardName = document.getElementById('card-name').value;
+        const cardNumber = document.getElementById('card-number').value;
+        const cardExpiry = document.getElementById('card-expiry').value;
+        const cardCVV = document.getElementById('card-cvv').value;
+
+        if (!cardName || !cardNumber || !cardExpiry || !cardCVV) {
+            alert('אנא מלא את כל פרטי האשראי.');
+            return; // יוצא מהפונקציה אם שדות האשראי לא מולאו
+        }
+    }
+
+    // ודא שכל שדות הכתובת מולאו
+    const name = document.getElementById('name').value;
+    const address = document.getElementById('address').value;
+    const city = document.getElementById('city').value;
+    const postalCode = document.getElementById('postal-code').value;
+
+    if (!name || !address || !city || !postalCode) {
+        alert('אנא מלא את כל פרטי הכתובת.');
+        return; // יוצא מהפונקציה אם שדות הכתובת לא מולאו
+    }
+
+    const order = {
+        name: name,
+        email: document.getElementById('email').value, // אימייל לא חובה
+        phone: document.getElementById('phone').value,
+        address: address,
+        city: city,
+        postalCode: postalCode,
+        paymentMethod: paymentMethod,
+        totalPrice: localStorage.getItem('cartTotal'),
+        items: JSON.parse(localStorage.getItem('cart')) || [] // Ensure it defaults to an empty array
+    };
+
+    let orders = JSON.parse(localStorage.getItem('orders')) || [];
+    orders.push(order);
+    localStorage.setItem('orders', JSON.stringify(orders));
+
+    let allOrders = JSON.parse(localStorage.getItem('allOrders')) || [];
+    allOrders.push(order);
+    localStorage.setItem('allOrders', JSON.stringify(allOrders));
+
+    localStorage.removeItem('cart'); // Remove cart after placing the order
+    alert('הזמנתך התקבלה בהצלחה!');
+    window.location.href = 'orders.html'; // Redirect to the orders page
+}
+
+
+        // Toggle menu functionality
+        document.getElementById("toggle-menu").addEventListener("click", function() {
+            const navLinks = document.getElementById("nav-links");
+            navLinks.classList.toggle("active");
+        });
+    </script>
 </body>
 </html>

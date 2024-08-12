@@ -1,17 +1,21 @@
 const express = require('express');
 const multer = require('multer');
-const fs = require('fs');
 const bodyParser = require('body-parser');
 const path = require('path');
+const session = require('express-session');
 
 const app = express();
 app.use(express.json());
-/******************************************************************** */
-
-
-
 app.use(bodyParser.json());
 app.use(express.static('public')); // להגיש את קבצי ה-HTML
+
+// הגדרת session
+app.use(session({
+    secret: '123', // שנה למפתח סודי כלשהו
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // שים true אם אתה משתמש ב-HTTPS
+}));
 
 // סיסמת המנהל
 const ADMIN_PASSWORD = '12345';
@@ -21,21 +25,29 @@ app.post('/admin/login', (req, res) => {
     const { password } = req.body;
 
     if (password === ADMIN_PASSWORD) {
-        // אם הסיסמה נכונה, מחזירים תגובה חיובית
-        res.json({ success: true });
+        req.session.isAdmin = true; // סימון המשתמש כמנהל
+        return res.json({ success: true });
     } else {
-        // אם הסיסמה שגויה, מחזירים תגובה שלילית
-        res.json({ success: false });
+        return res.json({ success: false });
     }
 });
 
+// פונקציה לבדוק אם המשתמש מחובר
+function isAuthenticated(req, res, next) {
+    if (req.session.isAdmin) {
+        return next();
+    }
+    res.status(403).send('Unauthorized'); // מחזיר שגיאה אם לא מחובר
+}
 
+// נתיבים לדפים המוגנים
+app.get('/all-orders.html', isAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'all-orders.html')); // הגיש את הקובץ
+});
 
-
-
-
-
-
+app.get('/admin-panel.html', isAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'admin-panel.html')); // הגיש את הקובץ
+});
 
 
 

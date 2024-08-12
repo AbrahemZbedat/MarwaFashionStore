@@ -7,16 +7,10 @@
     <link rel="stylesheet" href="css/clothes.css">
     <link rel="stylesheet" href="css/cart.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
-
-
     <title>Cart</title>
 </head>
 <body>
     <header id="cart-header" class="main-header">
- 
         <nav>
             <div class="nav-container">
                 <button id="toggle-menu" class="toggle-button">☰</button>
@@ -28,7 +22,6 @@
                 </ul>
             </div>
         </nav>
-        
     </header>
 
     <section class="container content-section" id="content-section">
@@ -42,10 +35,18 @@
             <!-- Cart items will be dynamically inserted here -->
         </div>
         <div class="cart-total">
-            <strong class="cart-total-title">Total</strong>
+            <strong class="cart-total-title">סכום ביניים</strong>
+            <span class="cart-subtotal-price">₪0.00</span>
+        </div>
+        <div class="cart-total">
+            <strong class="cart-total-title">עלות משלוח</strong>
+            <span class="cart-shipping-price">₪35.00</span>
+        </div>
+        <div class="cart-total">
+            <strong class="cart-total-title">סך הכל לתשלום</strong>
             <span class="cart-total-price">₪0.00</span>
         </div>
-        <button id="btn-purchase" class="btn btn-primary btn-purchase" type="button">תשלום</button>
+        <button id="btn-purchase" class="btn btn-primary btn-purchase" type="button" onclick="proceedToCheckout()">תשלום</button>
     </section>
 
     <footer class="main-footer">
@@ -55,6 +56,8 @@
     </footer>
 
     <script>
+        const shippingCost = 35.00;
+
         function loadCartItems() {
             const cartItemsContainer = document.querySelector('.cart-items');
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -96,28 +99,35 @@
 
         function updateTotal() {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            let total = 0;
+            let subtotal = 0;
             cart.forEach(item => {
-                total += item.price * item.quantity;
+                subtotal += item.price * item.quantity;
             });
+            const total = subtotal + shippingCost;
+            document.querySelector('.cart-subtotal-price').textContent = '₪' + subtotal.toFixed(2);
             document.querySelector('.cart-total-price').textContent = '₪' + total.toFixed(2);
+            
+            // שמירת הסכום הכולל ב-localStorage עבור דף ה-Checkout
+            localStorage.setItem('cartTotal', total.toFixed(2));
         }
 
         document.addEventListener('DOMContentLoaded', loadCartItems);
 
-
         function updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const totalCount = cart.reduce((count, item) => count + item.quantity, 0);
-    document.getElementById('cart-count').textContent = totalCount > 0 ? `(${totalCount})` : '';
-}
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalCount = cart.reduce((count, item) => count + item.quantity, 0);
+            document.getElementById('cart-count').textContent = totalCount > 0 ? `(${totalCount})` : '';
+        }
 
-   // Toggle menu functionality
-   document.getElementById("toggle-menu").addEventListener("click", function() {
+        function proceedToCheckout() {
+            window.location.href = 'checkout.html';
+        }
+
+        // Toggle menu functionality
+        document.getElementById("toggle-menu").addEventListener("click", function() {
             const navLinks = document.getElementById("nav-links");
-            navLinks.classList.toggle("active"); // Toggle the 'active' class
+            navLinks.classList.toggle("active");
         });
-
     </script>
 </body>
 </html>
