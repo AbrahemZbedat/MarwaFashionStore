@@ -230,6 +230,37 @@ app.get('/', (req, res) => {
 app.get('/cart.html', (req, res) => {
     res.render('cart'); // ודא שיש לך קובץ cart.ejs (או cart.pug) בתיקיית views
 });
+/**************************************** */
+
+app.post('/api/saveOrder', (req, res) => {
+    const newOrder = req.body;
+
+    fs.readFile('orders.json', (err, data) => {
+        if (err) {
+            return res.status(500).json({ message: 'Failed to read orders file' });
+        }
+
+        const orders = JSON.parse(data || '[]'); // Parse existing orders or create an empty array
+        orders.push(newOrder);
+
+        fs.writeFile('orders.json', JSON.stringify(orders, null, 2), (err) => {
+            if (err) {
+                return res.status(500).json({ message: 'Failed to save order' });
+            }
+            res.status(200).json({ message: 'Order saved successfully' });
+        });
+    });
+});
+
+// נתיב לקבלת כל ההזמנות
+app.get('/api/getAllOrders', (req, res) => {
+    fs.readFile('orders.json', (err, data) => {
+        if (err) {
+            return res.status(500).json({ message: 'Failed to read orders file' });
+        }
+        res.status(200).json(JSON.parse(data || '[]'));
+    });
+});
 
 
 // הפעלת השרת

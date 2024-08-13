@@ -85,36 +85,41 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const allOrders = JSON.parse(localStorage.getItem('allOrders')) || [];
-            const allOrderDetailsDiv = document.getElementById('all-order-details');
-
-            if (allOrders.length === 0) {
-                allOrderDetailsDiv.innerHTML = '<p>אין הזמנות.</p>';
-            } else {
-                allOrders.forEach((order, index) => {
-                    allOrderDetailsDiv.innerHTML += `
-                        <div class="order">
-                            <h3>פרטי הזמנה #${index + 1}</h3>
-                            <p>שם: ${order.name}</p>
-                            <p>אימייל: ${order.email}</p>
-                            <p>טלפון: ${order.phone}</p>
-                            <p>כתובת: ${order.address}, ${order.city}, ${order.postalCode}</p>
-                            <p>שיטת תשלום: ${order.paymentMethod}</p>
-                            <p>סה"כ לתשלום: ${order.totalPrice}</p>
-                            <h4>פרטי המוצרים:</h4>
-                            <ul>
-                                ${order.items.map(item => `
-                                    <li>
-                                        <img src="${item.image}" width="50" height="50" alt="${item.title}">
-                                        ${item.title} - ${item.size}, ${item.color} (כמות: ${item.quantity}) - ₪${item.price}
-                                    </li>
-                                `).join('')}
-                            </ul>
-                        </div>
-                        <hr>
-                    `;
+            fetch('/api/getAllOrders')
+                .then(response => response.json())
+                .then(allOrders => {
+                    const allOrderDetailsDiv = document.getElementById('all-order-details');
+                    if (allOrders.length === 0) {
+                        allOrderDetailsDiv.innerHTML = '<p>אין הזמנות.</p>';
+                    } else {
+                        allOrders.forEach((order, index) => {
+                            allOrderDetailsDiv.innerHTML += `
+                                <div class="order">
+                                    <h3>פרטי הזמנה #${index + 1}</h3>
+                                    <p>שם: ${order.name}</p>
+                                    <p>אימייל: ${order.email}</p>
+                                    <p>טלפון: ${order.phone}</p>
+                                    <p>כתובת: ${order.address}, ${order.city}, ${order.postalCode}</p>
+                                    <p>שיטת תשלום: ${order.paymentMethod}</p>
+                                    <p>סה"כ לתשלום: ₪${order.totalPrice}</p>
+                                    <h4>פרטי המוצרים:</h4>
+                                    <ul>
+                                        ${order.items.map(item => `
+                                            <li>
+                                                <img src="${item.image}" width="50" height="50" alt="${item.title}">
+                                                ${item.title} - ${item.size}, ${item.color} (כמות: ${item.quantity}) - ₪${item.price}
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                                <hr>
+                            `;
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching orders:', error);
                 });
-            }
         });
 
         // Toggle menu functionality

@@ -161,9 +161,7 @@
         items: JSON.parse(localStorage.getItem('cart')) || [] // Ensure it defaults to an empty array
     };
 
-    let orders = JSON.parse(localStorage.getItem('orders')) || [];
-    orders.push(order);
-    localStorage.setItem('orders', JSON.stringify(orders));
+ 
 
     let allOrders = JSON.parse(localStorage.getItem('allOrders')) || [];
     allOrders.push(order);
@@ -173,6 +171,44 @@
     alert('הזמנתך התקבלה בהצלחה!');
     window.location.href = 'orders.html'; // Redirect to the orders page
 }
+
+
+// פונקציה לשליחת ההזמנה לשרת לאחר ביצוע ההזמנה
+function submitOrder(order) {
+    fetch('/api/saveOrder', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(order)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Order saved successfully:', data);
+    })
+    .catch(error => {
+        console.error('Error saving order:', error);
+    });
+}
+
+// דוגמה להזמנה שצריך לשלוח
+const order = {
+    name: 'יוסי כהן',
+    email: 'yossi@example.com',
+    phone: '050-1234567',
+    address: 'רחוב ירושלים 1',
+    city: 'תל אביב',
+    postalCode: '12345',
+    paymentMethod: 'כרטיס אשראי',
+    totalPrice: 150,
+    items: [
+        { title: 'חולצה', size: 'L', color: 'כחול', quantity: 1, price: 100, image: 'path/to/image.jpg' },
+        { title: 'מכנסיים', size: 'M', color: 'שחור', quantity: 1, price: 50, image: 'path/to/image.jpg' }
+    ]
+};
+
+// שליחה של ההזמנה
+submitOrder(order);
 
 
         // Toggle menu functionality
