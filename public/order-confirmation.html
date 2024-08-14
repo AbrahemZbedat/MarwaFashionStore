@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אישור הזמנה</title>
+</head>
+<body>
+    <h2>תודה על ההזמנה שלך!</h2>
+    <div id="order-details"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('orderId');
+
+            const response = await fetch(`/api/get-order/${orderId}`);
+            if (response.ok) {
+                const order = await response.json();
+                const orderDetailsDiv = document.getElementById('order-details');
+
+                orderDetailsDiv.innerHTML = `
+                    <h3>פרטי ההזמנה</h3>
+                    <p>שם: ${order.name}</p>
+                    <p>אימייל: ${order.email}</p>
+                    <p>טלפון: ${order.phone}</p>
+                    <p>כתובת: ${order.address}, ${order.city}, ${order.postalCode}</p>
+                    <p>שיטת תשלום: ${order.paymentMethod}</p>
+                    <h3>פריטים שהוזמנו</h3>
+                    <ul>${order.items.map(item => `
+                        <li>
+                            ${item.title} - ₪${item.price} 
+                            <img src="${item.image}" alt="${item.title}" style="width: 100px; height: auto;">
+                        </li>`).join('')}
+                    </ul>
+                `;
+            } else {
+                alert('שגיאה בהשגת פרטי ההזמנה.');
+            }
+        });
+    </script>
+</body>
+</html>

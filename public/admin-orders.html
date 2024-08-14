@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הזמנות - מנהל</title>
+</head>
+<body>
+    <h2>הזמנות</h2>
+    <div id="orders-list"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const response = await fetch('/api/get-orders');
+            if (response.ok) {
+                const orders = await response.json();
+                const ordersListDiv = document.getElementById('orders-list');
+
+                if (orders.length === 0) {
+                    ordersListDiv.innerHTML = '<p>לא נמצאו הזמנות.</p>';
+                } else {
+                    const ordersHTML = orders.map(order => `
+                        <div class="order">
+                            <h3>הזמנה #${order.id}</h3>
+                            <p>שם: ${order.name}</p>
+                            <p>אימייל: ${order.email}</p>
+                            <p>טלפון: ${order.phone}</p>
+                            <p>כתובת: ${order.address}, ${order.city}, ${order.postalCode}</p>
+                            <p>שיטת תשלום: ${order.paymentMethod}</p>
+                            <h4>פריטים שהוזמנו:</h4>
+                            <ul>${order.items.map(item => `
+                                <li>
+                                    ${item.title} - ₪${item.price} 
+                                    <img src="${item.image}" alt="${item.title}" style="width: 100px; height: auto;">
+                                </li>`).join('')}
+                            </ul>
+                        </div>
+                    `).join('');
+                    ordersListDiv.innerHTML = ordersHTML;
+                }
+            } else {
+                alert('שגיאה בהשגת ההזמנות.');
+            }
+        });
+    </script>
+</body>
+</html>

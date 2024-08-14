@@ -3,6 +3,7 @@ const multer = require('multer');
 const bodyParser = require('body-parser');
 const path = require('path');
 const session = require('express-session');
+const fs = require('fs');
 
 const app = express();
 app.use(express.json());
@@ -232,6 +233,57 @@ app.get('/cart.html', (req, res) => {
 });
 /**************************************** */
 
+app.use(express.json());
+app.use(express.static('public')); // משרת קבצים סטטיים
+
+app.post('/api/place-order', (req, res) => {
+    const newOrder = req.body;
+    const ordersData = JSON.parse(fs.readFileSync('orders.json'));
+    newOrder.id = ordersData.length + 1; // ID חדש
+    ordersData.push(newOrder);
+    
+    try {
+        fs.writeFileSync('orders.json', JSON.stringify(ordersData));
+        res.json({ orderId: newOrder.id });
+    } catch (error) {
+        console.error("Error saving order:", error);
+        res.status(500).send('שגיאה בשמירת ההזמנה');
+    }
+});
+
+app.get('/api/get-order/:orderId', (req, res) => {
+    const ordersData = JSON.parse(fs.readFileSync('orders.json'));
+    const order = ordersData.find(o => o.id === parseInt(req.params.orderId));
+
+    if (order) {
+        res.json(order);
+    } else {
+        res.status(404).send('ההזמנה לא נמצאה');
+    }
+});
+
+
+// Endpoint לקבלת הזמנה לפי ID
+app.get('/api/get-order/:orderId', (req, res) => {
+    const ordersData = JSON.parse(fs.readFileSync('orders.json'));
+    const order = ordersData.find(o => o.id == req.params.orderId);
+    if (order) {
+        res.json(order);
+    } else {
+        res.status(404).send('הזמנה לא נמצאה');
+    }
+});
+
+// Endpoint לקבלת כל ההזמנות
+app.get('/api/get-orders', (req, res) => {
+    try {
+        const ordersData = JSON.parse(fs.readFileSync('orders.json'));
+        res.json(ordersData);
+    } catch (error) {
+        console.error("Error reading orders:", error);
+        res.status(500).send('שגיאה בהשגת ההזמנות');
+    }
+});
 
 
 // הפעלת השרת

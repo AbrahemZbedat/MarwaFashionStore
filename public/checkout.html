@@ -7,29 +7,6 @@
     <link rel="stylesheet" href="css/checkout.css">
     <title>Checkout</title>
 
-    <style>
-      body {
-          direction: rtl; /* Set direction to right-to-left */
-      }
-      .container {
-          text-align: right; /* Align text to the right */
-          max-width: 600px; /* Limit the width for better readability */
-          margin: 0 auto; /* Center the container */
-      }
-      .checkout-form label, .checkout-form h3 {
-          display: block; /* Ensure labels and headings are block elements */
-          margin-bottom: 8px; /* Add space between elements */
-          
-      }
-      .checkout-form input, .checkout-form select {
-          width: 90%; /* Full width for inputs and select */
-          margin-bottom: 16px; /* Space below inputs */
-          padding: 8px; /* Padding for inputs */
-      }
-      .main-footer {
-          text-align: center; /* Center the footer content */
-      }
-  </style>
 </head>
 <body>
     <header class="main-header">
@@ -122,54 +99,44 @@
             document.getElementById('order-total-price').textContent = '₪' + orderTotalPrice;
 
         });
-        function placeOrder() {
-    // בדוק אם שיטת התשלום היא כרטיס אשראי
-    const paymentMethod = document.getElementById('payment-method').value;
-    if (paymentMethod === 'credit') {
-        const cardName = document.getElementById('card-name').value;
-        const cardNumber = document.getElementById('card-number').value;
-        const cardExpiry = document.getElementById('card-expiry').value;
-        const cardCVV = document.getElementById('card-cvv').value;
 
-        if (!cardName || !cardNumber || !cardExpiry || !cardCVV) {
-            alert('אנא מלא את כל פרטי האשראי.');
-            return;
-        }
-    }
-
+        async function placeOrder() {
     const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
     const address = document.getElementById('address').value;
     const city = document.getElementById('city').value;
     const postalCode = document.getElementById('postal-code').value;
+    const paymentMethod = document.getElementById('payment-method').value;
 
-    if (!name || !address || !city || !postalCode) {
-        alert('אנא מלא את כל פרטי הכתובת.');
-        return;
-    }
-
-    const order = {
-        id: Date.now(), // מזהה ייחודי להזמנה
-        name: name,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        address: address,
-        city: city,
-        postalCode: postalCode,
-        paymentMethod: paymentMethod,
-        totalPrice: localStorage.getItem('cartTotal'),
-        items: JSON.parse(localStorage.getItem('cart')) || []
+    // קבל את פרטי הפריטים מהסל
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    const orderDetails = {
+        name,
+        email,
+        phone,
+        address,
+        city,
+        postalCode,
+        paymentMethod,
+        items: cart // הכנס את פרטי הפריטים כאן
     };
 
-    // שמירת ההזמנה ב-sessionStorage
-    let orders = JSON.parse(sessionStorage.getItem('orders')) || [];
-    orders.push(order);
-    sessionStorage.setItem('orders', JSON.stringify(orders));
-    
-    // שמירת ההזמנה הנוכחית
-    sessionStorage.setItem('currentOrder', JSON.stringify(order));
-    
-    // הפנייה לדף תודה
-    window.location.href = 'thankyou.html';
+    const response = await fetch('/api/place-order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderDetails)
+    });
+
+    if (response.ok) {
+        const orderConfirmation = await response.json();
+        window.location.href = `/order-confirmation.html?orderId=${orderConfirmation.orderId}`;
+    } else {
+        alert('שגיאה בהזמנה. אנא נסה שוב.');
+    }
 }
 
 

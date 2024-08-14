@@ -73,6 +73,27 @@
     float: right;
     color: grey;
   }
+  body {
+    direction: rtl; /* Set direction to right-to-left */
+}
+.container {
+    text-align: right; /* Align text to the right */
+    max-width: 600px; /* Limit the width for better readability */
+    margin: 0 auto; /* Center the container */
+}
+.checkout-form label, .checkout-form h3 {
+    display: block; /* Ensure labels and headings are block elements */
+    margin-bottom: 8px; /* Add space between elements */
+    
+}
+.checkout-form input, .checkout-form select {
+    width: 90%; /* Full width for inputs and select */
+    margin-bottom: 16px; /* Space below inputs */
+    padding: 8px; /* Padding for inputs */
+}
+.main-footer {
+    text-align: center; /* Center the footer content */
+}
   
   /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (and change the direction - make the "cart" column go on top) */
   @media (max-width: 800px) {
