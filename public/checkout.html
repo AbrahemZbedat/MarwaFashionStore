@@ -126,7 +126,6 @@
     // בדוק אם שיטת התשלום היא כרטיס אשראי
     const paymentMethod = document.getElementById('payment-method').value;
     if (paymentMethod === 'credit') {
-        // ודא שכל שדות פרטי האשראי מולאו
         const cardName = document.getElementById('card-name').value;
         const cardNumber = document.getElementById('card-number').value;
         const cardExpiry = document.getElementById('card-expiry').value;
@@ -134,11 +133,10 @@
 
         if (!cardName || !cardNumber || !cardExpiry || !cardCVV) {
             alert('אנא מלא את כל פרטי האשראי.');
-            return; // יוצא מהפונקציה אם שדות האשראי לא מולאו
+            return;
         }
     }
 
-    // ודא שכל שדות הכתובת מולאו
     const name = document.getElementById('name').value;
     const address = document.getElementById('address').value;
     const city = document.getElementById('city').value;
@@ -146,69 +144,34 @@
 
     if (!name || !address || !city || !postalCode) {
         alert('אנא מלא את כל פרטי הכתובת.');
-        return; // יוצא מהפונקציה אם שדות הכתובת לא מולאו
+        return;
     }
 
     const order = {
+        id: Date.now(), // מזהה ייחודי להזמנה
         name: name,
-        email: document.getElementById('email').value, // אימייל לא חובה
+        email: document.getElementById('email').value,
         phone: document.getElementById('phone').value,
         address: address,
         city: city,
         postalCode: postalCode,
         paymentMethod: paymentMethod,
         totalPrice: localStorage.getItem('cartTotal'),
-        items: JSON.parse(localStorage.getItem('cart')) || [] // Ensure it defaults to an empty array
+        items: JSON.parse(localStorage.getItem('cart')) || []
     };
 
- 
-
-    let allOrders = JSON.parse(localStorage.getItem('allOrders')) || [];
-    allOrders.push(order);
-    localStorage.setItem('allOrders', JSON.stringify(allOrders));
-
-    localStorage.removeItem('cart'); // Remove cart after placing the order
-    alert('הזמנתך התקבלה בהצלחה!');
-    window.location.href = 'orders.html'; // Redirect to the orders page
+    // שמירת ההזמנה ב-sessionStorage
+    let orders = JSON.parse(sessionStorage.getItem('orders')) || [];
+    orders.push(order);
+    sessionStorage.setItem('orders', JSON.stringify(orders));
+    
+    // שמירת ההזמנה הנוכחית
+    sessionStorage.setItem('currentOrder', JSON.stringify(order));
+    
+    // הפנייה לדף תודה
+    window.location.href = 'thankyou.html';
 }
 
-
-// פונקציה לשליחת ההזמנה לשרת לאחר ביצוע ההזמנה
-function submitOrder(order) {
-    fetch('/api/saveOrder', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(order)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Order saved successfully:', data);
-    })
-    .catch(error => {
-        console.error('Error saving order:', error);
-    });
-}
-
-// דוגמה להזמנה שצריך לשלוח
-const order = {
-    name: 'יוסי כהן',
-    email: 'yossi@example.com',
-    phone: '050-1234567',
-    address: 'רחוב ירושלים 1',
-    city: 'תל אביב',
-    postalCode: '12345',
-    paymentMethod: 'כרטיס אשראי',
-    totalPrice: 150,
-    items: [
-        { title: 'חולצה', size: 'L', color: 'כחול', quantity: 1, price: 100, image: 'path/to/image.jpg' },
-        { title: 'מכנסיים', size: 'M', color: 'שחור', quantity: 1, price: 50, image: 'path/to/image.jpg' }
-    ]
-};
-
-// שליחה של ההזמנה
-submitOrder(order);
 
 
         // Toggle menu functionality
