@@ -4,44 +4,202 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>הזמנות - מנהל</title>
+    <style>
+        /* כל ה-CSS שלך נשאר כפי שהוא */
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            direction: rtl; /* Align text to the right */
+        }
+
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        #orders-list {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .order {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 15px 0;
+            transition: transform 0.2s;
+        }
+
+        .order:hover {
+            transform: scale(1.02);
+        }
+
+        h3 {
+            color: #333;
+        }
+
+        h4 {
+            margin-top: 15px;
+            color: #555;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #f1f1f1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        img {
+            margin-left: 10px;
+            border-radius: 4px;
+            width: 100px; /* Fixed width for images */
+            height: auto; /* Maintain aspect ratio */
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .status-button {
+            background-color: #2196F3;
+        }
+
+        .status-button:hover {
+            background-color: #1e88e5;
+        }
+
+        .delete-button {
+            background-color: #f44336;
+        }
+
+        .delete-button:hover {
+            background-color: #e53935;
+        }
+
+        /* Styles for search */
+        #search-bar {
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        #search-input {
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
     <h2>הזמנות</h2>
+    <div id="search-bar">
+        <input type="text" id="search-input" placeholder="חפש הזמנה לפי שם או אימייל">
+    </div>
     <div id="orders-list"></div>
 
     <script>
+        let allOrders = [];
+
         document.addEventListener('DOMContentLoaded', async function() {
             const response = await fetch('/api/get-orders');
             if (response.ok) {
-                const orders = await response.json();
-                const ordersListDiv = document.getElementById('orders-list');
-
-                if (orders.length === 0) {
-                    ordersListDiv.innerHTML = '<p>לא נמצאו הזמנות.</p>';
-                } else {
-                    const ordersHTML = orders.map(order => `
-                        <div class="order">
-                            <h3>הזמנה #${order.id}</h3>
-                            <p>שם: ${order.name}</p>
-                            <p>אימייל: ${order.email}</p>
-                            <p>טלפון: ${order.phone}</p>
-                            <p>כתובת: ${order.address}, ${order.city}, ${order.postalCode}</p>
-                            <p>שיטת תשלום: ${order.paymentMethod}</p>
-                            <h4>פריטים שהוזמנו:</h4>
-                            <ul>${order.items.map(item => `
-                                <li>
-                                    ${item.title} - ₪${item.price} 
-                                    <img src="${item.image}" alt="${item.title}" style="width: 100px; height: auto;">
-                                </li>`).join('')}
-                            </ul>
-                        </div>
-                    `).join('');
-                    ordersListDiv.innerHTML = ordersHTML;
-                }
+                allOrders = await response.json();
+                displayOrders(allOrders);
             } else {
                 alert('שגיאה בהשגת ההזמנות.');
             }
         });
+
+        function displayOrders(orders) {
+            const ordersListDiv = document.getElementById('orders-list');
+
+            if (orders.length === 0) {
+                ordersListDiv.innerHTML = '<p>לא נמצאו הזמנות.</p>';
+            } else {
+                const ordersHTML = orders.map(order => `
+                    <div class="order">
+                        <h3>הזמנה #${order.id}</h3>
+                        <p>שם: ${order.name}</p>
+                        <p>אימייל: ${order.email}</p>
+                        <p>טלפון: ${order.phone}</p>
+                        <p>כתובת: ${order.address}, ${order.city}, ${order.postalCode}</p>
+                        <p>שיטת תשלום: ${order.paymentMethod}</p>
+                        <h4>פריטים שהוזמנו:</h4>
+                        <ul>${order.items.map(item => `
+                            <li>
+                                ${item.title} - ₪${item.price} 
+                                <img src="${item.image}" alt="${item.title}" style="width: 100px; height: auto;">
+                            </li>`).join('')}
+                        </ul>
+                        <p>סטטוס: ${order.status || 'לא בוצע'}</p>
+                        <button onclick="toggleStatus(${order.id})">
+                            ${order.status ? 'סמן כלא בוצע' : 'סמן כבוצע'}
+                        </button>
+                        <button onclick="deleteOrder(${order.id})">מחק הזמנה</button>
+                    </div>
+                `).join('');
+                ordersListDiv.innerHTML = ordersHTML;
+            }
+        }
+
+        document.getElementById('search-input').addEventListener('input', function() {
+            const searchValue = this.value.toLowerCase();
+            const filteredOrders = allOrders.filter(order => 
+                order.name.toLowerCase().includes(searchValue) || 
+                order.email.toLowerCase().includes(searchValue)
+            );
+            displayOrders(filteredOrders);
+        });
+
+        async function toggleStatus(orderId) {
+            const response = await fetch(`/api/toggle-status/${orderId}`, { method: 'PATCH' });
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('שגיאה בעדכון הסטטוס.');
+            }
+        }
+
+        async function deleteOrder(orderId) {
+            const response = await fetch(`/api/delete-order/${orderId}`, { method: 'DELETE' });
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('שגיאה במחיקת ההזמנה.');
+            }
+        }
     </script>
 </body>
 </html>

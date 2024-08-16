@@ -233,24 +233,74 @@ app.get('/cart.html', (req, res) => {
 });
 /**************************************** */
 
-app.use(express.json());
-app.use(express.static('public')); // משרת קבצים סטטיים
+//mail send - order information
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'abrahem.zbedat9@gmail.com', // החלף במייל שלך
+        pass: 'fzcw zkwx xgsg mahk'
+    }
+});
 
 app.post('/api/place-order', (req, res) => {
     const newOrder = req.body;
     const ordersData = JSON.parse(fs.readFileSync('orders.json'));
     newOrder.id = ordersData.length + 1; // ID חדש
     ordersData.push(newOrder);
-    
+
     try {
         fs.writeFileSync('orders.json', JSON.stringify(ordersData));
-        res.json({ orderId: newOrder.id });
+
+        // חישוב סך הכל מחיר הזמנה
+        const totalPrice = newOrder.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+
+        // הכנת פרטי ההזמנה לאימייל
+        const orderDate = new Date().toLocaleDateString();
+        const orderDetails = `
+            שם מלא: ${newOrder.name || 'לא ידוע'}
+            אימייל: ${newOrder.email || 'לא ידוע'}
+            מספר טלפון: ${newOrder.phone || 'לא ידוע'}
+            כתובת: ${newOrder.address || 'לא ידוע'}, ${newOrder.city || 'לא ידוע'}, ${newOrder.postalCode || 'לא ידוע'}
+            שיטת תשלום: ${newOrder.paymentMethod || 'לא ידוע'}
+            תאריך הזמנה: ${orderDate}
+            פרטי פריטים:
+            ${newOrder.items.map(item => {
+                const itemName = item.title || 'לא ידוע';
+                const itemQuantity = item.quantity || 0;
+                const itemPrice = item.price ? (item.price * itemQuantity).toFixed(2) : 'לא ידוע';
+                return `- ${itemName} (${itemQuantity}) - ₪${itemPrice}`;
+            }).join('\n')}
+            
+            סך הכל מחיר הזמנה: ₪${totalPrice.toFixed(2)}
+        `;
+
+        // שליחת המייל
+        const mailOptions = {
+            from: 'abrahem.zbedat9@gmail.com', // החלף במייל שלך
+            to: 'abrahem.zbedat9@gmail.com', // מייל שלך לקבלת ההזמנה
+            subject: 'הזמנה חדשה מ-Marwa Fashion Store',
+            text: `התקבלה הזמנה חדשה:\n\n${orderDetails}`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending email:', error);
+                return res.status(500).send('שגיאה בהזמנה. אנא נסה שוב.');
+            }
+            console.log('Email sent:', info.response);
+            res.json({ orderId: newOrder.id });
+        });
+
     } catch (error) {
         console.error("Error saving order:", error);
         res.status(500).send('שגיאה בשמירת ההזמנה');
     }
 });
 
+
+/************************************* */
 app.get('/api/get-order/:orderId', (req, res) => {
     const ordersData = JSON.parse(fs.readFileSync('orders.json'));
     const order = ordersData.find(o => o.id === parseInt(req.params.orderId));
@@ -262,6 +312,42 @@ app.get('/api/get-order/:orderId', (req, res) => {
     }
 });
 
+app.patch('/api/toggle-status/:orderId', (req, res) => {
+    const ordersData = JSON.parse(fs.readFileSync('orders.json'));
+    const order = ordersData.find(o => o.id == req.params.orderId);
+
+    if (order) {
+        order.status = order.status ? null : 'בוצע'; // מחליף את הסטטוס
+        try {
+            fs.writeFileSync('orders.json', JSON.stringify(ordersData, null, 2));
+            res.json(order);
+        } catch (error) {
+            console.error("Error updating order status:", error);
+            res.status(500).send('שגיאה בעדכון הסטטוס');
+        }
+    } else {
+        res.status(404).send('הזמנה לא נמצאה');
+    }
+});
+
+// Endpoint למחיקת הזמנה
+app.delete('/api/delete-order/:orderId', (req, res) => {
+    let ordersData = JSON.parse(fs.readFileSync('orders.json'));
+    const initialLength = ordersData.length;
+    ordersData = ordersData.filter(o => o.id != req.params.orderId);
+
+    if (ordersData.length < initialLength) {
+        try {
+            fs.writeFileSync('orders.json', JSON.stringify(ordersData, null, 2));
+            res.sendStatus(200);
+        } catch (error) {
+            console.error("Error deleting order:", error);
+            res.status(500).send('שגיאה במחיקת ההזמנה');
+        }
+    } else {
+        res.status(404).send('הזמנה לא נמצאה');
+    }
+});
 
 // Endpoint לקבלת הזמנה לפי ID
 app.get('/api/get-order/:orderId', (req, res) => {

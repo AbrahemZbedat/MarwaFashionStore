@@ -54,6 +54,9 @@ h1 strong {
   background-image: url("Images/defense1.jpg");
   height: 600px;
   background-size: 33%;
+
+  background-position: center; /* ממקם את התמונה במרכז */
+  
 }
 
 #cart-header {

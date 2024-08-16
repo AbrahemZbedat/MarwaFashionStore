@@ -1,106 +1,214 @@
+/* Flexbox Layout */
 .row {
-    display: -ms-flexbox; /* IE10 */
-    display: flex;
-    -ms-flex-wrap: wrap; /* IE10 */
-    flex-wrap: wrap;
-    margin: 0 -16px;
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  margin: 0 -16px;
+}
+
+/* Navigation Styles */
+nav {
+  background-color: #333; /* Dark background color */
+  width: 95%; /* Full width for the navigation */
+}
+
+.nav-container {
+  display: flex;
+  justify-content: flex-end; /* Align items to the end (right) */
+  align-items: center;
+  padding: 10px 15px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+
+}
+
+
+
+.toggle-button {
+  display: none; /* Hidden by default */
+  background-color: #333; /* Dark background */
+  color: white; /* White text */
+  border: none; /* No border */
+  font-size: 24px; /* Size of the icon */
+  cursor: pointer; /* Pointer cursor */
+}
+
+.nav-links li {
+  margin: 0 15px; /* Space between items */
+}
+
+.nav-links a {
+  color: #fff; /* White text color */
+  text-decoration: none; /* Remove underline */
+  font-size: 18px; /* Font size for links */
+  transition: color 0.3s; /* Smooth color transition */
+}
+
+.nav-links a:hover {
+  color: #f39c12; /* Change color on hover */
+}
+
+
+/* Mobile Styles */
+@media only screen and (max-width: 800px) {
+
+  #place-order-btn{
+width: 90px;
+height: 30px;
+    background-color: #8bf48f;
+  }
+  .toggle-button {
+      display: block; /* Show toggle button on mobile */
+      margin-right: auto; /* Push toggle button to the left */
+  }
+
+  .nav-links {
+      display: none; /* Hide links by default */
+      flex-direction: column; /* Stack items vertically */
+      background-color: #333; /* Same background for the dropdown */
+      position: absolute; /* Position absolute to avoid pushing other elements */
+      top: 50px; /* Position below the toggle button */
+      left: 0; /* Align to the left */
+      width: 100%; /* Full width */
+      z-index: 1000; /* Ensure it's on top */
+  }
+
+  .nav-links.active {
+      display: flex; /* Show links when active */
+  }
+
+  .nav-links li {
+      margin: 10px 0; /* Space between items vertically */
+      text-align: center; /* Center the text */
+
+      margin-right: 150px;
+  }
+}
+
+/* Cart Styles */
+@media (max-width: 768px) {
+  .cart-header {
+    display: none; /* Hide the headers in mobile view */
+  }
+
+  .cart-row {
+    flex-direction: column; /* Stack items vertically */
+  }
+
+  .cart-item,
+  .cart-price,
+  .cart-quantity {
+    width: 100%; /* Make each item take full width */
+    margin-bottom: 10px; /* Add some space between items */
+  }
+}
+
+/* Flexbox Columns */
+.col-25 {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;
+}
+
+.col-50 {
+  -ms-flex: 50%; /* IE10 */
+  flex: 50%;
+}
+
+.col-75 {
+  -ms-flex: 75%; /* IE10 */
+  flex: 75%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+  padding: 0 16px;
+}
+
+/* Container */
+.container {
+  background-color: #f2f2f2;
+  padding: 5px 20px 15px 20px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+  text-align: right; /* Align text to the right */
+  max-width: 600px; /* Limit the width for better readability */
+  margin: 0 auto; /* Center the container */
+}
+
+/* Form Styles */
+input[type=text] {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+label {
+  margin-bottom: 10px;
+  display: block;
+}
+
+.icon-container {
+  margin-bottom: 20px;
+  padding: 7px 0;
+  font-size: 24px;
+}
+
+/* Checkout Button */
+.checkout {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+/* Price Style */
+span.price {
+  float: right;
+  color: grey;
+}
+
+/* Checkout Form */
+.checkout-form label, 
+.checkout-form h3 {
+  display: block; /* Ensure labels and headings are block elements */
+  margin-bottom: 8px; /* Add space between elements */
+}
+
+.checkout-form input, 
+.checkout-form select {
+  width: 90%; /* Full width for inputs and select */
+  margin-bottom: 16px; /* Space below inputs */
+  padding: 8px; /* Padding for inputs */
+}
+
+/* Footer */
+.main-footer {
+  text-align: center; /* Center the footer content */
+}
+
+/* Responsive Layout - Stacking Columns on Small Screens */
+@media (max-width: 800px) {
+  .row {
+    flex-direction: column-reverse; /* Stack columns */
   }
   
   .col-25 {
-    -ms-flex: 25%; /* IE10 */
-    flex: 25%;
+    margin-bottom: 20px; /* Add space below columns */
   }
-  
-  .col-50 {
-    -ms-flex: 50%; /* IE10 */
-    flex: 50%;
-  }
-  
-  .col-75 {
-    -ms-flex: 75%; /* IE10 */
-    flex: 75%;
-  }
-  
-  .col-25,
-  .col-50,
-  .col-75 {
-    padding: 0 16px;
-  }
-  
-  .container {
-    background-color: #f2f2f2;
-    padding: 5px 20px 15px 20px;
-    border: 1px solid lightgrey;
-    border-radius: 3px;
-  }
-  
-  input[type=text] {
-    width: 100%;
-    margin-bottom: 20px;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-  }
-  
-  label {
-    margin-bottom: 10px;
-    display: block;
-  }
-  
-  .icon-container {
-    margin-bottom: 20px;
-    padding: 7px 0;
-    font-size: 24px;
-  }
-  
-  .checkout {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px;
-    margin: 10px 0;
-    border: none;
-    width: 100%;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 17px;
-  }
-  
-  .btn:hover {
-    background-color: #45a049;
-  }
-  
-  span.price {
-    float: right;
-    color: grey;
-  }
-  body {
-    direction: rtl; /* Set direction to right-to-left */
 }
-.container {
-    text-align: right; /* Align text to the right */
-    max-width: 600px; /* Limit the width for better readability */
-    margin: 0 auto; /* Center the container */
-}
-.checkout-form label, .checkout-form h3 {
-    display: block; /* Ensure labels and headings are block elements */
-    margin-bottom: 8px; /* Add space between elements */
-    
-}
-.checkout-form input, .checkout-form select {
-    width: 90%; /* Full width for inputs and select */
-    margin-bottom: 16px; /* Space below inputs */
-    padding: 8px; /* Padding for inputs */
-}
-.main-footer {
-    text-align: center; /* Center the footer content */
-}
-  
-  /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (and change the direction - make the "cart" column go on top) */
-  @media (max-width: 800px) {
-    .row {
-      flex-direction: column-reverse;
-    }
-    .col-25 {
-      margin-bottom: 20px;
-    }
-  }

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/mystyles.css">
     <link rel="stylesheet" href="css/checkout.css">
@@ -10,15 +11,14 @@
 </head>
 <body>
     <header class="main-header">
-        <nav>
+              <nav>
             <div class="nav-container">
-       
+                <button id="toggle-menu" class="toggle-button">☰</button>
                 <ul id="nav-links" class="nav-links">
-                  <li><a href="/">דף ראשי</a></li>
                     <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> סל קניות</a></li>
-                    <li><a href="contact.html">צור קשר</a></li>
+                    <li><a href="contact.html">צור קשר </a></li>
                     <li><a href="location.html">המיקום שלנו</a></li>
-                   
+                    <li><a href="/">דף ראשי</a></li>
                 </ul>
             </div>
         </nav>
@@ -56,17 +56,37 @@
             </select>
 
             <div id="credit-card-details" style="display: none;">
-                <label for="card-name">שם על הכרטיס</label required>
-                <input type="text" id="card-name">
+                <label for="card-name">שם בעל הכרטיס</label>
+                <input type="text" id="card-name" required>
                 
-                <label for="card-number">מספר כרטיס</label required>
-                <input type="text" id="card-number">
+                <label for="card-number">מספר כרטיס</label>
+                <input type="text" id="card-number" required>
                 
-                <label for="card-expiry">תוקף הכרטיס</label required>
-                <input type="date" id="card-expiry">
+                <label for="card-expiry-month">תוקף הכרטיס</label>
+                <div class="card-expiry">
+                    <select id="card-expiry-month" required>
+                        <option value="" disabled selected>חודש</option>
+                        <option value="01">01 - ינואר</option>
+                        <option value="02">02 - פברואר</option>
+                        <option value="03">03 - מרץ</option>
+                        <option value="04">04 - אפריל</option>
+                        <option value="05">05 - מאי</option>
+                        <option value="06">06 - יוני</option>
+                        <option value="07">07 - יולי</option>
+                        <option value="08">08 - אוגוסט</option>
+                        <option value="09">09 - ספטמבר</option>
+                        <option value="10">10 - אוקטובר</option>
+                        <option value="11">11 - נובמבר</option>
+                        <option value="12">12 - דצמבר</option>
+                    </select>
+                    
+                    <select id="card-expiry-year" required>
+                        <option value="" disabled selected>שנה</option>
+                    </select>
+                </div>
                 
-                <label for="card-cvv">CVV</label required>
-                <input type="text" id="card-cvv">
+                <label for="card-cvv">CVV</label>
+                <input type="text" id="card-cvv" required>
             </div>
 
             <h3>סיכום הזמנה</h3>
@@ -82,70 +102,98 @@
         </div>
     </footer>
 
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const paymentMethodSelect = document.getElementById('payment-method');
             const creditCardDetails = document.getElementById('credit-card-details');
-            
+            const currentYear = new Date().getFullYear();
+            const expiryYearSelect = document.getElementById('card-expiry-year');
+
+            // Add years to the expiry year dropdown
+            for (let i = currentYear; i <= currentYear + 20; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                expiryYearSelect.appendChild(option);
+            }
+
             paymentMethodSelect.addEventListener('change', function() {
                 if (this.value === 'credit') {
                     creditCardDetails.style.display = 'block';
+                    // הפיכת כל שדות הויזה לחובה
+                    document.querySelectorAll('#credit-card-details input').forEach(input => input.required = true);
                 } else {
                     creditCardDetails.style.display = 'none';
+                    // הסרת חובה משדות הויזה אם לא נבחרה אשראי
+                    document.querySelectorAll('#credit-card-details input').forEach(input => input.required = false);
                 }
             });
 
             const orderTotalPrice = localStorage.getItem('cartTotal');
             document.getElementById('order-total-price').textContent = '₪' + orderTotalPrice;
-
         });
 
         async function placeOrder() {
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const phone = document.getElementById('phone').value;
-    const address = document.getElementById('address').value;
-    const city = document.getElementById('city').value;
-    const postalCode = document.getElementById('postal-code').value;
-    const paymentMethod = document.getElementById('payment-method').value;
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+            const city = document.getElementById('city').value;
+            const postalCode = document.getElementById('postal-code').value;
+            const paymentMethod = document.getElementById('payment-method').value;
 
-    // קבל את פרטי הפריטים מהסל
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    
-    const orderDetails = {
-        name,
-        email,
-        phone,
-        address,
-        city,
-        postalCode,
-        paymentMethod,
-        items: cart // הכנס את פרטי הפריטים כאן
-    };
+            if (paymentMethod === 'credit') {
+                const cardName = document.getElementById('card-name').value;
+                const cardNumber = document.getElementById('card-number').value;
+                const cardExpiryMonth = document.getElementById('card-expiry-month').value;
+                const cardExpiryYear = document.getElementById('card-expiry-year').value;
+                const cardCvv = document.getElementById('card-cvv').value;
 
-    const response = await fetch('/api/place-order', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(orderDetails)
-    });
+                if (!cardName || !cardNumber || !cardExpiryMonth || !cardExpiryYear || !cardCvv) {
+                    alert('אנא מלא את כל שדות פרטי כרטיס האשראי.');
+                    return;
+                }
+            }
 
-    if (response.ok) {
-        const orderConfirmation = await response.json();
-        window.location.href = `/order-confirmation.html?orderId=${orderConfirmation.orderId}`;
-    } else {
-        alert('שגיאה בהזמנה. אנא נסה שוב.');
-    }
-}
+            if (!name || !phone || !address || !city || !postalCode) {
+                alert('אנא מלא את כל שדות הכתובת והטלפון.');
+                return;
+            }
 
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
+            const orderDetails = {
+                name,
+                phone,
+                address,
+                city,
+                postalCode,
+                paymentMethod,
+                items: cart
+            };
 
-        // Toggle menu functionality
+            const response = await fetch('/api/place-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(orderDetails)
+            });
+
+            if (response.ok) {
+                const orderConfirmation = await response.json();
+                window.location.href = `/order-confirmation.html?orderId=${orderConfirmation.orderId}`;
+            } else {
+                alert('שגיאה בהזמנה. אנא נסה שוב.');
+            }
+        }
+
         document.getElementById("toggle-menu").addEventListener("click", function() {
             const navLinks = document.getElementById("nav-links");
             navLinks.classList.toggle("active");
         });
     </script>
+    
+
 </body>
 </html>
