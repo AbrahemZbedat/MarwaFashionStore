@@ -14,7 +14,7 @@
                 <button id="toggle-menu" class="toggle-button">☰</button>
                 <ul id="nav-links" class="nav-links">
                     <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> סל קניות</a></li>
-                    <li><a href="contact.html">צור קשר </a></li>
+                    <li><a href="contact.html">צור קשר</a></li>
                     <li><a href="location.html">המיקום שלנו</a></li>
                     <li><a href="/">דף ראשי</a></li>
                 </ul>
@@ -81,7 +81,7 @@
                     
                     <select id="card-expiry-year" required>
                         <option value="" disabled selected>שנה</option>
-                        <!-- שנים יתווספו על ידי JavaScript -->
+                        <!-- השנים יתווספו על ידי JavaScript -->
                     </select>
                 </div>
                 
@@ -154,6 +154,7 @@
                                 return actions.order.capture().then(function(details) {
                                     alert('תשלום בוצע בהצלחה על ידי ' + details.payer.name.given_name);
                                     placeOrder();
+                                    window.location.href = '/order-confirmation.html';
                                 });
                             }
                         }).render('#paypal-button-container');
@@ -172,42 +173,47 @@
 
         async function placeOrder() {
             const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
             const address = document.getElementById('address').value;
             const city = document.getElementById('city').value;
             const postalCode = document.getElementById('postal-code').value;
             const paymentMethod = document.getElementById('payment-method').value;
 
-            if (paymentMethod !== 'paypal' && (!name || !phone || !address || !city || !postalCode)) {
-                alert('אנא מלא את כל השדות הנדרשים.');
-                return;
-            }
+            if (paymentMethod === 'cash') {
+                const order = {
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    address: address,
+                    city: city,
+                    postalCode: postalCode,
+                    paymentMethod: paymentMethod,
+                    cart: JSON.parse(localStorage.getItem('cart'))
+                };
 
-            const orderDetails = {
-                name,
-                phone,
-                address,
-                city,
-                postalCode,
-                paymentMethod,
-                cart: JSON.parse(localStorage.getItem('cart'))
-            };
+                try {
+                    const response = await fetch('/place-order', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(order)
+                    });
 
-            const response = await fetch('/api/place-order', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(orderDetails)
-            });
+                    const result = await response.json();
 
-            const result = await response.json();
-            if (result.success) {
-                alert('ההזמנה בוצעה בהצלחה!');
-                localStorage.removeItem('cart');
-                window.location.href = '/';
-            } else {
-                alert('ההזמנה נכשלה, אנא נסה שוב מאוחר יותר.');
+                    if (result.success) {
+                        alert('ההזמנה בוצעה בהצלחה!');
+                        localStorage.removeItem('cart');
+                        window.location.href = '/order-confirmation.html';
+                    } else {
+                        alert('ההזמנה נכשלה, אנא נסה שוב מאוחר יותר.');
+                    }
+                } catch (error) {
+                    console.error('Error placing order:', error);
+                    alert('התרחשה שגיאה בביצוע ההזמנה.');
+                }
             }
         }
     </script>
