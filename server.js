@@ -42,16 +42,13 @@ function isAuthenticated(req, res, next) {
 }
 
 // נתיבים לדפים המוגנים
-app.get('/all-orders.html', isAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'all-orders.html')); // הגיש את הקובץ
+app.get('/admin-orders.html', isAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'private', 'admin-orders.html')); // הגיש את הקובץ המוגן מהתיקייה 'private'
 });
 
-app.get('/admin-panel.html', isAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'admin-panel.html')); // הגיש את הקובץ
+app.get('/admin_panel.html', isAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'private', 'admin_panel.html')); // הגיש את הקובץ המוגן מהתיקייה 'private'
 });
-
-
-
 
 
 

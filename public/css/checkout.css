@@ -6,6 +6,45 @@
   flex-wrap: wrap;
   margin: 0 -16px;
 }
+/* checkout.css */
+/* עיצוב הכפתור */
+#place-order-btn {
+  width: 130px;
+  height: 30px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: absolute; /* מיקום מוחלט בתוך המיכל */
+  bottom: 10px; /* מרווח מלמטה */
+  right: 10px; /* מרווח מימין */
+  z-index: 2; /* מבטיח שהכפתור יהיה מעל שאר התוכן */
+}
+
+#place-order-btn:hover {
+  background-color: #45a049;
+}
+
+/* עיצוב מיכל הכפתור */
+.place-order-btn-container {
+  position: relative; /* מיקום יחסי עבור המיכל */
+  padding: 10px; /* רווחים סביב */
+  text-align: right; /* יישור לימין */
+}
+
+/* הוספת עיצוב לשאר התוכן */
+.checkout-form {
+  position: relative; /* מיקום יחסי כדי למנוע חפיפות */
+  z-index: 1; /* מבטיח שהתוכן יופיע מתחת לכפתור */
+}
+
+.checkout-form p {
+  margin-bottom: 40px; /* מרווח מתחת לטקסט */
+}
+
 
 /* Navigation Styles */
 nav {

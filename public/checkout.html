@@ -2,16 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/mystyles.css">
     <link rel="stylesheet" href="css/checkout.css">
     <title>Checkout</title>
-
 </head>
 <body>
     <header class="main-header">
-              <nav>
+        <nav>
             <div class="nav-container">
                 <button id="toggle-menu" class="toggle-button">☰</button>
                 <ul id="nav-links" class="nav-links">
@@ -37,22 +35,23 @@
             <label for="phone">מספר טלפון</label>
             <input type="text" id="phone" required>
             
-            <h3>כתובת למשלוח</h3>
-            <label for="address">כתובת</label>
-            <input type="text" id="address" required>
-            
-            <label for="city">עיר</label>
-            <input type="text" id="city" required>
-            
-            <label for="postal-code">מיקוד</label>
-            <input type="text" id="postal-code" required>
+            <div id="address-section">
+                <h3>כתובת למשלוח</h3>
+                <label for="address">כתובת</label>
+                <input type="text" id="address" required>
+                
+                <label for="city">עיר</label>
+                <input type="text" id="city" required>
+                
+                <label for="postal-code">מיקוד</label>
+                <input type="text" id="postal-code" required>
+            </div>
             
             <h3>אמצעי תשלום</h3>
             <label for="payment-method">בחר שיטת תשלום</label>
             <select id="payment-method" required>
-              <option value="cash">מזומן לשליח</option>
-                <option value="credit">כרטיס אשראי</option>
-             
+                <option value="cash">מזומן לשליח</option>
+                <option value="paypal">PayPal / כרטיס אשראי</option>
             </select>
 
             <div id="credit-card-details" style="display: none;">
@@ -82,6 +81,7 @@
                     
                     <select id="card-expiry-year" required>
                         <option value="" disabled selected>שנה</option>
+                        <!-- שנים יתווספו על ידי JavaScript -->
                     </select>
                 </div>
                 
@@ -92,7 +92,12 @@
             <h3>סיכום הזמנה</h3>
             <p>סה"כ לתשלום: <span id="order-total-price">₪0.00</span></p>
 
-            <button id="place-order-btn" type="button" onclick="placeOrder()">בצע הזמנה</button>
+            <!-- PayPal Payment Button -->
+            <div id="paypal-button-container" style="display: none;"></div>
+
+            <div class="place-order-btn-container">
+                <button id="place-order-btn" type="button" onclick="placeOrder()">בצע הזמנה</button>
+            </div>
         </div>
     </section>
 
@@ -102,11 +107,14 @@
         </div>
     </footer>
 
-    
+    <script src="https://www.paypal.com/sdk/js?client-id=AXZ76vIsWZJHXmdrfa62HIYvxgDlPluKpSFyuA9nnjLKmHk1b7AI_bMXlyQDBCiufKrbizzrYNVGb94f&currency=ILS&locale=he_IL"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const paymentMethodSelect = document.getElementById('payment-method');
             const creditCardDetails = document.getElementById('credit-card-details');
+            const paypalButtonContainer = document.getElementById('paypal-button-container');
+            const addressSection = document.getElementById('address-section');
+            const placeOrderBtn = document.getElementById('place-order-btn');
             const currentYear = new Date().getFullYear();
             const expiryYearSelect = document.getElementById('card-expiry-year');
 
@@ -119,14 +127,42 @@
             }
 
             paymentMethodSelect.addEventListener('change', function() {
-                if (this.value === 'credit') {
-                    creditCardDetails.style.display = 'block';
-                    // הפיכת כל שדות הויזה לחובה
-                    document.querySelectorAll('#credit-card-details input').forEach(input => input.required = true);
+                if (this.value === 'paypal') {
+                    creditCardDetails.style.display = 'none';
+                    paypalButtonContainer.style.display = 'block';
+                    addressSection.style.display = 'block'; // Show address section
+                    placeOrderBtn.style.display = 'none'; // Hide the place order button
+                    document.querySelectorAll('#credit-card-details input').forEach(input => input.required = false);
+
+                    // Check if PayPal buttons already rendered
+                    if (!paypalButtonContainer.hasChildNodes()) {
+                        paypal.Buttons({
+                            createOrder: function(data, actions) {
+                                const orderTotalPrice = localStorage.getItem('cartTotal');
+                                return actions.order.create({
+                                    purchase_units: [{
+                                        amount: {
+                                            value: orderTotalPrice
+                                        }
+                                    }],
+                                    application_context: {
+                                        shipping_preference: "NO_SHIPPING" // No address will be collected
+                                    }
+                                });
+                            },
+                            onApprove: function(data, actions) {
+                                return actions.order.capture().then(function(details) {
+                                    alert('תשלום בוצע בהצלחה על ידי ' + details.payer.name.given_name);
+                                    placeOrder();
+                                });
+                            }
+                        }).render('#paypal-button-container');
+                    }
                 } else {
                     creditCardDetails.style.display = 'none';
-                    // הסרת חובה משדות הויזה אם לא נבחרה אשראי
-                    document.querySelectorAll('#credit-card-details input').forEach(input => input.required = false);
+                    paypalButtonContainer.style.display = 'none';
+                    placeOrderBtn.style.display = 'block';
+                    document.querySelectorAll('#credit-card-details input').forEach(input => input.required = true);
                 }
             });
 
@@ -142,25 +178,10 @@
             const postalCode = document.getElementById('postal-code').value;
             const paymentMethod = document.getElementById('payment-method').value;
 
-            if (paymentMethod === 'credit') {
-                const cardName = document.getElementById('card-name').value;
-                const cardNumber = document.getElementById('card-number').value;
-                const cardExpiryMonth = document.getElementById('card-expiry-month').value;
-                const cardExpiryYear = document.getElementById('card-expiry-year').value;
-                const cardCvv = document.getElementById('card-cvv').value;
-
-                if (!cardName || !cardNumber || !cardExpiryMonth || !cardExpiryYear || !cardCvv) {
-                    alert('אנא מלא את כל שדות פרטי כרטיס האשראי.');
-                    return;
-                }
-            }
-
-            if (!name || !phone || !address || !city || !postalCode) {
-                alert('אנא מלא את כל שדות הכתובת והטלפון.');
+            if (paymentMethod !== 'paypal' && (!name || !phone || !address || !city || !postalCode)) {
+                alert('אנא מלא את כל השדות הנדרשים.');
                 return;
             }
-
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
             const orderDetails = {
                 name,
@@ -169,7 +190,7 @@
                 city,
                 postalCode,
                 paymentMethod,
-                items: cart
+                cart: JSON.parse(localStorage.getItem('cart'))
             };
 
             const response = await fetch('/api/place-order', {
@@ -180,20 +201,15 @@
                 body: JSON.stringify(orderDetails)
             });
 
-            if (response.ok) {
-                const orderConfirmation = await response.json();
-                window.location.href = `/order-confirmation.html?orderId=${orderConfirmation.orderId}`;
+            const result = await response.json();
+            if (result.success) {
+                alert('ההזמנה בוצעה בהצלחה!');
+                localStorage.removeItem('cart');
+                window.location.href = '/';
             } else {
-                alert('שגיאה בהזמנה. אנא נסה שוב.');
+                alert('ההזמנה נכשלה, אנא נסה שוב מאוחר יותר.');
             }
         }
-
-        document.getElementById("toggle-menu").addEventListener("click", function() {
-            const navLinks = document.getElementById("nav-links");
-            navLinks.classList.toggle("active");
-        });
     </script>
-    
-
 </body>
 </html>
