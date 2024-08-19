@@ -8,7 +8,48 @@
 
     margin-top: 10px;
 }
+.fixed-cart {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    background-color: #de6844; /* צבע רקע בולט */
+    color: #fff; /* צבע טקסט */
+    padding: 15px;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* מיקום טקסט מתחת לאייקון */
+    align-items: center;
+    gap: 10px; /* רווח בין אייקון לטקסט */
+    transition: background-color 0.3s, transform 0.3s;
+}
 
+.fixed-cart a {
+    text-decoration: none;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column; /* עיצוב בעמודה */
+    align-items: center;
+}
+
+.fixed-cart i {
+    font-size: 30px; /* גודל אייקון */
+}
+
+.fixed-cart span {
+    font-weight: bold;
+    font-size: 14px; /* גודל טקסט */
+}
+
+.fixed-cart:hover {
+    background-color: #f2653a; /* צבע רקע משתנה בהעברת עכבר */
+    transform: translateY(-50%) scale(1.1); /* הגדלה קלה */
+}
 
 nav {
     background-color: #333; /* Dark background color */

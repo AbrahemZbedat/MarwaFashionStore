@@ -1,0 +1,157 @@
+#copyright{
+
+    margin-top: 10px;
+}
+
+
+nav {
+    background-color: #333; /* Dark background color */
+    width: 100%; /* Full width for the navigation */
+}
+
+.nav-container {
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+    align-items: center; /* Center items vertically */
+    padding: 10px 15px; /* Padding for the nav container */
+}
+
+.toggle-button {
+    display: none; /* Hidden by default */
+    background-color: #333; /* Dark background */
+    color: white; /* White text */
+    border: none; /* No border */
+    font-size: 24px; /* Size of the icon */
+    cursor: pointer; /* Pointer cursor */
+    margin-right: auto; /* Push links to the right */
+}
+
+.nav-links {
+    list-style: none; /* Remove default list styles */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+    display: flex; /* Horizontal layout for desktop */
+}
+
+.nav-links li {
+    margin: 0 15px; /* Space between items */
+}
+
+.nav-links a {
+    color: #fff; /* White text color */
+    text-decoration: none; /* Remove underline */
+    font-size: 18px; /* Font size for links */
+    transition: color 0.3s; /* Smooth color transition */
+}
+
+.nav-links a:hover {
+    color: #f39c12; /* Change color on hover */
+}
+.policy-content {
+    font-family: 'Arial', sans-serif;
+    font-size: 18px;
+    direction: rtl; /* כיוון הטקסט מימין לשמאל */
+    text-align: justify; /* יישור הטקסט בצורה אחידה */
+    line-height: 1.8;
+    margin: 20px auto; /* אוטומטית כדי למרכז את התוכן */
+    color: #444;
+    background-color: #fafafa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1200px; /* הגבלת רוחב התיבה */
+}
+
+.policy-content h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 60px; /* הוספת מרווח נוסף מעל הכותרת */
+}
+
+.policy-content p {
+    margin-bottom: 15px;
+    padding-right: 20px; /* ריווח פנימי לימין */
+    text-indent: 0; /* ביטול ריווח התחלתי לפסקאות */
+    border-right: 3px solid #ccc; /* קו גבול דק לימין */
+}
+/*********************/
+.fixed-cart {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    background-color: #de6844; /* צבע רקע בולט */
+    color: #fff; /* צבע טקסט */
+    padding: 15px;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* מיקום טקסט מתחת לאייקון */
+    align-items: center;
+    gap: 10px; /* רווח בין אייקון לטקסט */
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.fixed-cart a {
+    text-decoration: none;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column; /* עיצוב בעמודה */
+    align-items: center;
+}
+
+.fixed-cart i {
+    font-size: 30px; /* גודל אייקון */
+}
+
+.fixed-cart span {
+    font-weight: bold;
+    font-size: 14px; /* גודל טקסט */
+}
+
+.fixed-cart:hover {
+    background-color: #f2653a; /* צבע רקע משתנה בהעברת עכבר */
+    transform: translateY(-50%) scale(1.1); /* הגדלה קלה */
+}
+
+/*********************************************************************/
+
+
+
+/* Mobile Styles */
+@media only screen and (max-width: 800px) {
+    .toggle-button {
+        display: block; /* Show toggle button on mobile */
+        margin-right: auto; /* Push toggle button to the left */
+    }
+
+    .nav-links {
+        display: none; /* Hide links by default */
+        flex-direction: column; /* Stack items vertically */
+        background-color: #333; /* Same background for the dropdown */
+        position: absolute; /* Position absolute to avoid pushing other elements */
+        top: 50px; /* Position below the toggle button */
+        left: 0; /* Align to the left */
+        width: 100%; /* Full width */
+        z-index: 1000; /* Ensure it's on top */
+    }
+
+    .nav-links.active {
+        display: flex; /* Show links when active */
+    }
+
+    .nav-links li {
+        margin: 10px 0; /* Space between items vertically */
+        text-align: center; /* Center the text */
+    }
+
+ 
+}
