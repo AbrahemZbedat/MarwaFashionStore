@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>הזמנות - מנהל</title>
+    <title>הזמנות שבוצעו</title>
     <style>
-        /* כל ה-CSS שלך נשאר כפי שהוא */
+        /* CSS similar to the previous orders page */
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
@@ -74,68 +75,10 @@
             width: 100px; /* Fixed width for images */
             height: auto; /* Maintain aspect ratio */
         }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 15px;
-            cursor: pointer;
-            margin-right: 10px;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .delete-button {
-            background-color: #f44336;
-        }
-
-        .delete-button:hover {
-            background-color: #e53935;
-        }
-
-        /* Styles for search */
-        #search-bar {
-            margin: 20px auto;
-            text-align: center;
-        }
-
-        #search-input {
-            padding: 10px;
-            width: 80%;
-            max-width: 400px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .nav-button {
-            background-color: #2196F3;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            text-align: center;
-            display: inline-block;
-            margin: 10px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .nav-button:hover {
-            background-color: #1976D2;
-        }
     </style>
 </head>
 <body>
-    <h2>הזמנות</h2>
-    <a href="completed-orders.html" class="nav-button">הזמנות שבוצעו</a>
-    <div id="search-bar">
-        <input type="text" id="search-input" placeholder="חפש הזמנה לפי שם או אימייל">
-    </div>
+    <h2>הזמנות שבוצעו</h2>
     <div id="orders-list"></div>
 
     <script>
@@ -145,9 +88,9 @@
             const response = await fetch('/api/get-orders');
             if (response.ok) {
                 allOrders = await response.json();
-                // הצגת הזמנות שלא בוצעו בלבד
-                const uncompletedOrders = allOrders.filter(order => !order.status || order.status === 'לא בוצע');
-                displayOrders(uncompletedOrders);
+                // הצגת הזמנות שבוצעו בלבד
+                const completedOrders = allOrders.filter(order => order.status && order.status === 'בוצע');
+                displayOrders(completedOrders);
             } else {
                 alert('שגיאה בהשגת ההזמנות.');
             }
@@ -157,7 +100,7 @@
             const ordersListDiv = document.getElementById('orders-list');
 
             if (orders.length === 0) {
-                ordersListDiv.innerHTML = '<p>לא נמצאו הזמנות.</p>';
+                ordersListDiv.innerHTML = '<p>לא נמצאו הזמנות שבוצעו.</p>';
             } else {
                 const ordersHTML = orders.map(order => 
                     `<div class="order">
@@ -175,42 +118,11 @@
                             </li>`).join('')}
                         </ul>
                         <p>סטטוס: ${order.status || 'לא בוצע'}</p>
-                        <button onclick="toggleStatus(${order.id})">
-                            ${order.status ? 'סמן כלא בוצע' : 'סמן כבוצע'}
-                        </button>
-                        <button onclick="deleteOrder(${order.id})" class="delete-button">מחק הזמנה</button>
                     </div>`
                 ).join('');
                 ordersListDiv.innerHTML = ordersHTML;
             }
         }
-
-        async function toggleStatus(orderId) {
-            const response = await fetch(`/api/toggle-status/${orderId}`, { method: 'PATCH' });
-            if (response.ok) {
-                location.reload();
-            } else {
-                alert('שגיאה בעדכון הסטטוס.');
-            }
-        }
-
-        async function deleteOrder(orderId) {
-            const response = await fetch(`/api/delete-order/${orderId}`, { method: 'DELETE' });
-            if (response.ok) {
-                location.reload();
-            } else {
-                alert('שגיאה במחיקת ההזמנה.');
-            }
-        }
-
-        document.getElementById('search-input').addEventListener('input', function() {
-            const searchValue = this.value.toLowerCase();
-            const filteredOrders = allOrders.filter(order => 
-                order.name.toLowerCase().includes(searchValue) || 
-                order.email.toLowerCase().includes(searchValue)
-            );
-            displayOrders(filteredOrders);
-        });
     </script>
 </body>
 </html>

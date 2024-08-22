@@ -34,6 +34,7 @@ app.post('/admin/login', (req, res) => {
 });
 
 // פונקציה לבדוק אם המשתמש מחובר
+// פונקציה לבדוק אם המשתמש מחובר
 function isAuthenticated(req, res, next) {
     if (req.session.isAdmin) {
         return next();
@@ -49,6 +50,8 @@ app.get('/admin-orders.html', isAuthenticated, (req, res) => {
 app.get('/admin_panel.html', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'private', 'admin_panel.html')); // הגיש את הקובץ המוגן מהתיקייה 'private'
 });
+
+
 
 
 
@@ -308,7 +311,7 @@ app.get('/api/get-order/:orderId', (req, res) => {
         res.status(404).send('ההזמנה לא נמצאה');
     }
 });
-
+/*
 app.patch('/api/toggle-status/:orderId', (req, res) => {
     const ordersData = JSON.parse(fs.readFileSync('orders.json'));
     const order = ordersData.find(o => o.id == req.params.orderId);
@@ -326,7 +329,7 @@ app.patch('/api/toggle-status/:orderId', (req, res) => {
         res.status(404).send('הזמנה לא נמצאה');
     }
 });
-
+*/
 // Endpoint למחיקת הזמנה
 app.delete('/api/delete-order/:orderId', (req, res) => {
     let ordersData = JSON.parse(fs.readFileSync('orders.json'));
@@ -368,10 +371,133 @@ app.get('/api/get-orders', (req, res) => {
     }
 });
 
+/********************************** */
+app.use(bodyParser.json());
+app.use(express.static('public'));
 
-/***************************** */
+// מסלול לשמירת הזמנה
+app.post('/api/place-order', (req, res) => {
+    const orderDetails = req.body;
+    
+    // שמירת ההזמנה ב-JSON
+    const ordersFile = './orders.json';
+    let orders = [];
+    if (fs.existsSync(ordersFile)) {
+        const data = fs.readFileSync(ordersFile);
+        orders = JSON.parse(data);
+    }
+    orders.push(orderDetails);
+    fs.writeFileSync(ordersFile, JSON.stringify(orders, null, 2));
+
+    // שליחת אימייל
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'abrahem.zbedat9@gmail.com', // החלף באימייל שלך
+            pass: 'fzcw zkwx xgsg mahk' // החלף בסיסמה שלך
+        }
+    });
+
+  
+
+    const mailOptions = {
+        from: 'abrahem.zbedat9@gmail.com',
+        to: 'abrahem.zbedat9@gmail.com',
+        subject: 'הזמנתך התקבלה - Marwa Fashion Store',
+        text: `שלום ${orderDetails.name},\nתודה על הזמנתך ב-Marwa Fashion Store!\nסכום לתשלום: ₪${orderDetails.total}.\nהפריטים שהוזמנו:\n${orderDetails.items.map(item => item.name).join(', ')}.\n\nכתובת למשלוח: ${orderDetails.address}, ${orderDetails.city}, ${orderDetails.postalCode}.`
+    };
+
+    transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+
+    res.json({ orderId: orders.length }); // מחזיר את מספר ההזמנה
+});
+
+/******************************* */
+const ordersFilePath = path.join(__dirname, 'orders.json');
+let orders = [];
+
+fs.readFile(ordersFilePath, 'utf-8', (err, data) => {
+    if (!err) {
+        orders = JSON.parse(data); // Parse JSON and assign it to the orders variable
+    } else {
+        console.log('Error reading orders file:', err);
+    }
+});
 
 
+app.patch('/api/toggle-status/:orderId', (req, res) => {
+    const orderId = req.params.orderId;
+    const order = orders.find(o => o.id == orderId);
+
+    if (order) {
+        order.status = order.status === 'בוצע' ? 'לא בוצע' : 'בוצע';
+
+        // Save the updated orders to the JSON file
+        fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2), (err) => {
+            if (err) {
+                res.status(500).json({ message: 'Error saving updated orders.' });
+            } else {
+                res.status(200).json({ message: 'סטטוס עודכן בהצלחה.' });
+            }
+        });
+    } else {
+        res.status(404).json({ message: 'ההזמנה לא נמצאה.' });
+    }
+});
+
+/********************************** */
+function readOrders() {
+    return new Promise((resolve, reject) => {
+        fs.readFile(ordersFilePath, 'utf8', (err, data) => {
+            if (err) reject(err);
+            else resolve(JSON.parse(data));
+        });
+    });
+}
+
+// Utility function to write orders to JSON file
+function writeOrders(orders) {
+    return new Promise((resolve, reject) => {
+        fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2), 'utf8', (err) => {
+            if (err) reject(err);
+            else resolve();
+        });
+    });
+}
+
+// Get all orders
+app.get('/api/get-orders', async (req, res) => {
+    try {
+        const orders = await readOrders();
+        res.json(orders);
+    } catch (err) {
+        res.status(500).send('Error reading orders');
+    }
+});
+
+// Return multiple orders to uncompleted status
+app.post('/api/return-orders', async (req, res) => {
+    try {
+        const orders = await readOrders();
+        const orderIds = req.body.orderIds;
+        orderIds.forEach(id => {
+            const order = orders.find(o => o.id === parseInt(id, 10));
+            if (order) {
+                order.status = 'לא בוצע'; // Set status to 'not completed'
+            }
+        });
+        await writeOrders(orders);
+        res.status(200).send('Orders status updated');
+    } catch (err) {
+        res.status(500).send('Error updating order statuses');
+    }
+});
 
 // הפעלת השרת
 app.listen(3000, () => {

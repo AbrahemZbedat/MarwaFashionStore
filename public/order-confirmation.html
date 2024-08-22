@@ -77,6 +77,7 @@
                     <p>שם: ${order.name}</p>
                     <p>אימייל: ${order.email}</p>
                     <p>טלפון: ${order.phone}</p>
+                    <p>תאריך הזמנה: ${new Date(order.orderDate).toLocaleDateString('he-IL')}</p>
                     <p>כתובת: ${order.address}, ${order.city}, ${order.postalCode}</p>
                     <p>שיטת תשלום: ${order.paymentMethod}</p>
                     <h3>פריטים שהוזמנו</h3>

@@ -91,7 +91,32 @@ nav {
   color: #f39c12; /* Change color on hover */
 }
 
+/*******************************/
 
+/* Add padding to the form container */
+.checkout-form {
+  padding-bottom: 40px; /* Ensure space for the button */
+  position: relative;
+  z-index: 1; /* Keeps form content above other elements */
+  text-align: right; /* Aligns content to the right */
+}
+
+/* Update the button position */
+#place-order-btn {
+  position: absolute; /* Use absolute positioning to place it at the bottom right */
+  bottom: 20px; /* Space from the bottom */
+  right: 20px; /* Space from the right */
+  width: 130px; 
+  height: 30px; 
+  background-color: #4CAF50; 
+  color: white;
+  border: none; 
+  
+  border-radius: 5px; 
+  font-size: 16px; 
+  cursor: pointer; 
+  transition: background-color 0.3s ease;
+}
 /* Mobile Styles */
 @media only screen and (max-width: 800px) {
 
