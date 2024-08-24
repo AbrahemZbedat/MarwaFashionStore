@@ -72,7 +72,7 @@ app.use(express.static('public')); // מאפשר גישה לקבצים בתיק�
 const products = [];
 
 function readProducts() {
-    const filePath = path.join(__dirname, 'PRODUCTS.JSON');
+    const filePath = path.join(__dirname, 'products.json');
     const data = fs.readFileSync(filePath, 'utf8');
     return JSON.parse(data);
 }
@@ -136,7 +136,7 @@ app.post('/add-item', upload.array('images'), (req, res) => {
     };
 
     products.push(newItem);
-    fs.writeFileSync(path.join(__dirname, 'PRODUCTS.JSON'), JSON.stringify(products, null, 2));
+    fs.writeFileSync(path.join(__dirname, 'products.json'), JSON.stringify(products, null, 2));
     res.json({ success: true });
 });
 
@@ -163,7 +163,7 @@ app.post('/update-item', upload.array('images'), (req, res) => {
         images: images.length ? images : products[productIndex].images
     };
 
-    fs.writeFileSync(path.join(__dirname, 'PRODUCTS.JSON'), JSON.stringify(products, null, 2));
+    fs.writeFileSync(path.join(__dirname, 'products.json'), JSON.stringify(products, null, 2));
     res.json({ success: true });
 });
 
@@ -189,7 +189,7 @@ app.post('/delete-item', express.urlencoded({ extended: true }), (req, res) => {
 
     products.splice(productIndex, 1);
 
-    fs.writeFileSync(path.join(__dirname, 'PRODUCTS.JSON'), JSON.stringify(products, null, 2));
+    fs.writeFileSync(path.join(__dirname, 'products.json'), JSON.stringify(products, null, 2));
     res.json({ success: true });
 });
 
