@@ -123,7 +123,7 @@ const upload = multer({ storage: storage });
 
 // פונקציה לקרוא את קובץ ה-JSON
 function readProducts() {
-    const filePath = path.join(__dirname, 'PRODUCTS.JSON');
+    const filePath = path.join(__dirname,'public', 'PRODUCTS.JSON');
     if (!fs.existsSync(filePath)) {
         return [];
     }
@@ -132,12 +132,7 @@ function readProducts() {
 }
 
 /**************** */
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/api/products', (req, res) => {
-  // שליחת המוצרים מתוך הקובץ products.json
-  res.sendFile(path.join(__dirname,  'products.json'));
-});
 
 /**************** */
 // נתיב להוספת פריט
@@ -160,7 +155,7 @@ app.post('/add-item', upload.array('images'), (req, res) => {
     };
 
     products.push(newItem);
-    fs.writeFileSync(path.join(__dirname, 'PRODUCTS.JSON'), JSON.stringify(products, null, 2));
+    fs.writeFileSync(path.join(__dirname,'public', 'PRODUCTS.JSON'), JSON.stringify(products, null, 2));
     res.json({ success: true });
 });
 
@@ -187,7 +182,7 @@ app.post('/update-item', upload.array('images'), (req, res) => {
         images: images.length ? images : products[productIndex].images
     };
 
-    fs.writeFileSync(path.join(__dirname, 'PRODUCTS.JSON'), JSON.stringify(products, null, 2));
+    fs.writeFileSync(path.join(__dirname,'public', 'PRODUCTS.JSON'), JSON.stringify(products, null, 2));
     res.json({ success: true });
 });
 
@@ -213,7 +208,7 @@ app.post('/delete-item', express.urlencoded({ extended: true }), (req, res) => {
 
     products.splice(productIndex, 1);
 
-    fs.writeFileSync(path.join(__dirname, 'PRODUCTS.JSON'), JSON.stringify(products, null, 2));
+    fs.writeFileSync(path.join(__dirname,'public', 'PRODUCTS.JSON'), JSON.stringify(products, null, 2));
     res.json({ success: true });
 });
 
