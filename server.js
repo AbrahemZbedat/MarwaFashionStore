@@ -72,7 +72,7 @@ app.use(express.static('public')); // מאפשר גישה לקבצים בתיק�
 const products = [];
 
 function readProducts() {
-    const filePath = path.join(__dirname, 'PRODUCTS.JSON');
+    const filePath = path.join(__dirname,'public', 'PRODUCTS.JSON');
     const data = fs.readFileSync(filePath, 'utf8');
     return JSON.parse(data);
 }
@@ -92,7 +92,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // פונקציה לקרוא את הקובץ JSON
 function readProducts() {
-    const filePath = path.join(__dirname, 'PRODUCTS.JSON');
+    const filePath = path.join(__dirname,'public', 'PRODUCTS.JSON');
     const data = fs.readFileSync(filePath, 'utf8');
     return JSON.parse(data);
 }
@@ -123,7 +123,7 @@ const upload = multer({ storage: storage });
 
 // פונקציה לקרוא את קובץ ה-JSON
 function readProducts() {
-    const filePath = path.join(__dirname, 'PRODUCTS.JSON');
+    const filePath = path.join(__dirname,'public', 'PRODUCTS.JSON');
     if (!fs.existsSync(filePath)) {
         return [];
     }
@@ -154,7 +154,7 @@ app.post('/add-item', upload.array('images'), (req, res) => {
     };
 
     products.push(newItem);
-    fs.writeFileSync(path.join(__dirname, 'PRODUCTS.JSON'), JSON.stringify(products, null, 2));
+    fs.writeFileSync(path.join(__dirname,'public', 'PRODUCTS.JSON'), JSON.stringify(products, null, 2));
     res.json({ success: true });
 });
 
@@ -181,7 +181,7 @@ app.post('/update-item', upload.array('images'), (req, res) => {
         images: images.length ? images : products[productIndex].images
     };
 
-    fs.writeFileSync(path.join(__dirname, 'PRODUCTS.JSON'), JSON.stringify(products, null, 2));
+    fs.writeFileSync(path.join(__dirname,'public', 'PRODUCTS.JSON'), JSON.stringify(products, null, 2));
     res.json({ success: true });
 });
 
@@ -207,7 +207,7 @@ app.post('/delete-item', express.urlencoded({ extended: true }), (req, res) => {
 
     products.splice(productIndex, 1);
 
-    fs.writeFileSync(path.join(__dirname, 'PRODUCTS.JSON'), JSON.stringify(products, null, 2));
+    fs.writeFileSync(path.join(__dirname,'public', 'PRODUCTS.JSON'), JSON.stringify(products, null, 2));
     res.json({ success: true });
 });
 
