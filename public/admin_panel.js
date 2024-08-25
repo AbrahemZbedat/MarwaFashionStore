@@ -1,95 +1,75 @@
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    fetch('/products') // נתיב GET שמחזיר את רשימת המוצרים
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/get-items')
         .then(response => response.json())
-        .then(products => {
+        .then(data => {
             const itemsList = document.getElementById('itemsList');
-            products.forEach(product => {
-                const li = document.createElement('li');
-
-                // יצירת תמונה
+            itemsList.innerHTML = '';
+            data.forEach(item => {
+                const listItem = document.createElement('li');
+                
+                // יצירת תמונה עבור המוצר
                 const img = document.createElement('img');
-                img.src = `/images/${product.images[0]}`; // תמונה ראשונה מתוך המוצרים
-                img.alt = product.title;
-                img.style.width = '100px'; // ניתן להתאים את רוחב התמונה לפי הצורך
+                img.src = item.images[0]; // הצגת התמונה הראשונה
+                img.alt = item.title;
+                img.style.width = '100px'; // גודל התמונה
+                img.style.height = 'auto';
+                img.style.marginRight = '10px';
 
-                // יצירת טקסט
-                const text = document.createElement('div');
-                text.textContent = `ID: ${product.id}, Title: ${product.title}, Price: ${product.price}`;
+                // יצירת הטקסט של המוצר
+                const text = document.createElement('span');
+                text.textContent = `ID: ${item.id}, Title: ${item.title}, Price: ${item.price}`;
 
-                // הוספת התמונה והטקסט ל-<li>
-                li.appendChild(img);
-                li.appendChild(text);
-                itemsList.appendChild(li);
+                listItem.appendChild(img);
+                listItem.appendChild(text);
+                itemsList.appendChild(listItem);
             });
-        });
+        })
+        .catch(error => console.error('Error:', error));
 });
 
 
-document.addEventListener('DOMContentLoaded', () => {
-    const addItemForm = document.getElementById('addItemForm');
-    const updateItemForm = document.getElementById('updateItemForm');
-  
+document.getElementById('addItemForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    fetch('/add-item', {
+        method: 'POST',
+        body: formData
+    }).then(response => response.json())
+      .then(data => {
+          alert(data.message);
+          location.reload();  // Reload to update the list of items
+      });
+});
 
-    addItemForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const formData = new FormData(addItemForm);
-        fetch('/add-item', {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  alert('Item added successfully!');
-                  location.reload();
-              } else {
-                  alert('Failed to add item');
-              }
-          });
+document.getElementById('updateItemForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    fetch('/update-item', {
+        method: 'POST',
+        body: formData
+    }).then(response => response.json())
+      .then(data => {
+          alert(data.message);
+          location.reload();  // Reload to update the list of items
+      });
+});
+
+document.getElementById('deleteItemForm').addEventListener('submit', async (event) => {
+    event.preventDefault(); // מונע את שליחת הטופס
+
+    const id = document.getElementById('deleteId').value;
+
+    const response = await fetch('/delete-item', {
+        method: 'DELETE', // או 'POST' אם שינית את זה בטופס
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }), // שלח את ה-ID כגוף הבקשה
     });
 
-    updateItemForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const formData = new FormData(updateItemForm);
-        fetch('/update-item', {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  alert('Item updated successfully!');
-                  location.reload();
-              } else {
-                  alert('Failed to update item');
-              }
-          });
-    });
-
-   
+    const data = await response.json();
+    alert(data.message); // הצג את ההודעה
 });
 
 
-document.addEventListener('DOMContentLoaded', () => {
-    const deleteItemForm = document.getElementById('deleteItemForm');
 
-    deleteItemForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const formData = new FormData(deleteItemForm);
-        fetch('/delete-item', {
-            method: 'POST',
-            body: new URLSearchParams(formData).toString(), // שימוש ב-URLSearchParams
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded' // הגדרת סוג התוכן
-            }
-        }).then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  alert('Item deleted successfully!');
-                  location.reload();
-              } else {
-                  alert('Failed to delete item');
-              }
-          });
-    });
-});
