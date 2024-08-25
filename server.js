@@ -113,7 +113,10 @@ const upload = multer({ storage: storage });
 
 // פונקציה לקרוא את קובץ ה-JSON
 /**************** */
-
+function saveProducts(products) {
+    const filePath = path.join(__dirname, 'products.json');
+    fs.writeFileSync(filePath, JSON.stringify(products, null, 2), 'utf8');
+}
 
 /**************** */
 // נתיב להוספת פריט
@@ -137,6 +140,7 @@ app.post('/add-item', upload.array('images'), (req, res) => {
 
     products.push(newItem);
     fs.writeFileSync(path.join(__dirname, 'products.json'), JSON.stringify(products, null, 2));
+    saveProducts(products);  // שמירה אחרי הוספה
     res.json({ success: true });
 });
 
@@ -164,6 +168,7 @@ app.post('/update-item', upload.array('images'), (req, res) => {
     };
 
     fs.writeFileSync(path.join(__dirname, 'products.json'), JSON.stringify(products, null, 2));
+    saveProducts(products);  // שמירה אחרי הוספה
     res.json({ success: true });
 });
 
@@ -190,6 +195,7 @@ app.post('/delete-item', express.urlencoded({ extended: true }), (req, res) => {
     products.splice(productIndex, 1);
 
     fs.writeFileSync(path.join(__dirname, 'products.json'), JSON.stringify(products, null, 2));
+    saveProducts(products);  // שמירה אחרי הוספה
     res.json({ success: true });
 });
 
