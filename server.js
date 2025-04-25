@@ -69,148 +69,151 @@ app.use(express.static('public')); // מאפשר גישה לקבצים בתיק�
 
 /*************************************************************************************** */
 // Admin panel section
-const products = [
-    {
-        id: 1,
-        title: 'Brouse',
-        images: ['imgs/clothes/brouse.jpg'], // Update to images array
-        price: '100',
-        sizes: ['S', 'M', 'L'],
-        colors: ['Red', 'Blue']
-    },
-    {
-        id: 2,
-        title: 'Shirt',
-        images: ['imgs/clothes/shirt.jpg'], // Update to images array
-        price: '260',
-        sizes: ['S', 'M', 'L'],
-        colors: ['Black', 'White']
-    },
-    {
-        id: 3,
-        title: 'Dress1',
-        images: ['imgs/clothes/dress.jpg','imgs/clothes/dress2.jpg'], // Update to images array
-        price: '260',
-        sizes: ['S', 'M', 'L'],
-        colors: ['Black', 'White']
-    },
-    {
-        id: 4,
-        title: 'Dress2',
-        images: ['imgs/clothes/dress4.jpg','imgs/clothes/dress5.jpg','imgs/clothes/dress6.jpg'], // Update to images array
-        price: '220',
-        sizes: ['S', 'M', 'L'],
-        colors: ['Black', 'White']
-    },
-    {
-        id: 5,
-        title: 'Dress3',
-        images: ['imgs/clothes/d2.jpg','imgs/clothes/d3.jpg','imgs/clothes/d4.jpg','imgs/clothes/d5.jpg'], // Update to images array
-        price: '200',
-        sizes: ['S', 'M', 'L'],
-        colors: ['Black', 'White']
-    },  {
-        id: 6,
-        title: 'Dress3',
-        images: ['imgs/clothes/d7.jpg','imgs/clothes/d8.jpg','imgs/clothes/d9.jpg'], // Update to images array
-        price: '190',
-        sizes: ['S', 'M', 'L'],
-        colors: ['Black', 'White']
-    }
-];
+const products = [];
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'public/uploads/'); // Define the upload destination
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.originalname); // Use original file name
-    }
-});
+function readProducts() {
+    const filePath = path.join(__dirname, 'products.json');
+    const data = fs.readFileSync(filePath, 'utf8');
+    return JSON.parse(data);
+}
 
-const upload = multer({ storage });
-
-// Add new item
-app.post('/add-item', upload.array('images', 10), (req, res) => {
-    const { title, price, sizes, colors } = req.body;
-    const images = req.files.map(file => path.join('uploads', file.filename));
-    
-    const newItem = {
-        id: products.length + 1,
-        title,
-        price,
-        sizes: sizes.split(',').map(size => size.trim()),
-        colors: colors.split(',').map(color => color.trim()),
-        images // Store the array of images
-    };
-    
-    products.push(newItem);
-    res.json({ message: 'Item added successfully' });
-});
-
-// Update existing item
-app.post('/update-item', upload.array('images', 10), (req, res) => {
-    const { id, title, price, sizes, colors } = req.body;
-    const item = products.find(p => p.id === parseInt(id));
-
-    if (item) {
-        if (title) item.title = title;
-        if (price) item.price = price;
-        if (sizes) item.sizes = sizes.split(',').map(size => size.trim());
-        if (colors) item.colors = colors.split(',').map(color => color.trim());
-        if (req.files.length > 0) {
-           
-            const images = req.files.map(file => path.join('uploads', file.filename));
-            item.images = images; // Update with new images
-        }
-        res.json({ message: 'Item updated successfully' });
-    } else {
-        res.status(404).json({ message: 'Item not found' });
-    }
-});
-
-// Get all items
-app.get('/get-items', (req, res) => {
+// Route to get products
+app.get('/products', (req, res) => {
+    const products = readProducts();
     res.json(products);
 });
 
-// Delete item
-// Delete item
-// Delete item
-app.delete('/delete-item', (req, res) => {
-    const { id } = req.body; // קח את ה-ID מהבקשה
 
-    // מצא את האינדקס של הפריט
-    const index = products.findIndex(p => p.id === parseInt(id));
-    
-    if (index !== -1) {
-        products.splice(index, 1); // מחק את הפריט
-        res.json({ message: 'Item deleted successfully' });
-    } else {
-        res.status(404).json({ message: 'Item not found' });
+
+
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// פונקציה לקרוא את הקובץ JSON
+
+
+
+
+/************************** */
+// הגדרת תיקיית הסטטיים
+app.use(express.static(path.join(__dirname, 'public')));
+
+// הגדרת Multer לשמירת קבצים
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/images');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
     }
 });
 
+const upload = multer({ storage: storage });
+
+// פונקציה לקרוא את קובץ ה-JSON
+/**************** */
+function saveProducts(products) {
+    const filePath = path.join(__dirname, 'products.json');
+    fs.writeFileSync(filePath, JSON.stringify(products, null, 2), 'utf8');
+}
+
+/**************** */
+// נתיב להוספת פריט
+app.post('/add-item', upload.array('images'), (req, res) => {
+    const { title, price, sizes, colors } = req.body;
+    const images = req.files ? req.files.map(file => file.filename) : [];
+
+    if (!title || !price || !sizes || !colors) {
+        return res.status(400).json({ success: false, message: 'All fields are required' });
+    }
+
+    const products = readProducts();
+    const newItem = {
+        id: products.length ? products[products.length - 1].id + 1 : 1,
+        title,
+        price,
+        sizes: sizes.split(','),
+        colors: colors.split(','),
+        images
+    };
+
+    products.push(newItem);
+    fs.writeFileSync(path.join(__dirname, 'products.json'), JSON.stringify(products, null, 2));
+    res.json({ success: true });
+});
+
+// נתיב לעדכון פריט
+app.post('/update-item', upload.array('images'), (req, res) => {
+    const { id, title, price, sizes, colors } = req.body;
+    const images = req.files ? req.files.map(file => file.filename) : [];
+
+    if (!id) {
+        return res.status(400).json({ success: false, message: 'Item ID is required' });
+    }
+
+    const products = readProducts();
+    const productIndex = products.findIndex(p => p.id === parseInt(id));
+
+    if (productIndex === -1) return res.status(404).json({ success: false });
+
+    products[productIndex] = {
+        ...products[productIndex],
+        title: title || products[productIndex].title,
+        price: price || products[productIndex].price,
+        sizes: sizes ? sizes.split(',') : products[productIndex].sizes,
+        colors: colors ? colors.split(',') : products[productIndex].colors,
+        images: images.length ? images : products[productIndex].images
+    };
+
+    fs.writeFileSync(path.join(__dirname, 'products.json'), JSON.stringify(products, null, 2));
+    res.json({ success: true });
+});
+
+
+
+app.use(express.urlencoded({ extended: true }));
+
+app.post('/delete-item', express.urlencoded({ extended: true }), (req, res) => {
+    console.log('Request body:', req.body); // לוגים לקבלת פרטים על הבקשה
+
+    const { id } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ success: false, message: 'Item ID is required' });
+    }
+
+    const products = readProducts();
+    const productIndex = products.findIndex(p => p.id === parseInt(id));
+
+    if (productIndex === -1) {
+        return res.status(404).json({ success: false, message: 'Item not found' });
+    }
+
+    products.splice(productIndex, 1);
+
+    fs.writeFileSync(path.join(__dirname, 'products.json'), JSON.stringify(products, null, 2));
+    res.json({ success: true });
+});
 
 
 
 //end admin panel section
 /******************************************************************************************************************** */
 
-// נתיב לדף הראשי
 app.get('/', (req, res) => {
+    const products = readProducts();
     res.render('index', { products });
 });
-
 // נתיב לדף הפרטים של מוצר
 app.get('/item/:id', (req, res) => {
-    const productId = parseInt(req.params.id, 10);
+    const products = readProducts();
+    const productId = parseInt(req.params.id);
     const product = products.find(p => p.id === productId);
-    
     if (product) {
         res.render('item', { product });
     } else {
-        res.status(404).send('Product not found');
+        res.status(404).send('ITEM NOT FOUND');
     }
 });
 // Serve static files (e.g., CSS, images, etc.)
@@ -233,6 +236,10 @@ app.get('/cart.html', (req, res) => {
 });
 /**************************************** */
 
+// נתיב לדף הראשי
+app.get('/', (req, res) => {
+    res.render('index', { products });
+});
 //mail send - order information
 const nodemailer = require('nodemailer');
 
@@ -253,8 +260,12 @@ app.post('/api/place-order', (req, res) => {
     try {
         fs.writeFileSync('orders.json', JSON.stringify(ordersData));
 
-        // חישוב סך הכל מחיר הזמנה
-        const totalPrice = newOrder.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+        // חישוב סך הכל מחיר פריטים
+        const totalItemsPrice = newOrder.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+        
+        // הוספת עלות משלוח
+        const shippingCost = 35;
+        const totalPrice = totalItemsPrice + shippingCost;
 
         // הכנת פרטי ההזמנה לאימייל
         const orderDate = new Date().toLocaleDateString();
@@ -273,7 +284,9 @@ app.post('/api/place-order', (req, res) => {
                 return `- ${itemName} (${itemQuantity}) - ₪${itemPrice}`;
             }).join('\n')}
             
-            סך הכל מחיר הזמנה: ₪${totalPrice.toFixed(2)}
+            סך הכל מחיר פריטים: ₪${totalItemsPrice.toFixed(2)}
+            עלות משלוח: ₪${shippingCost}
+            סך הכל מחיר הזמנה כולל משלוח: ₪${totalPrice.toFixed(2)}
         `;
 
         // שליחת המייל
@@ -301,35 +314,8 @@ app.post('/api/place-order', (req, res) => {
 
 
 /************************************* */
-app.get('/api/get-order/:orderId', (req, res) => {
-    const ordersData = JSON.parse(fs.readFileSync('orders.json'));
-    const order = ordersData.find(o => o.id === parseInt(req.params.orderId));
 
-    if (order) {
-        res.json(order);
-    } else {
-        res.status(404).send('ההזמנה לא נמצאה');
-    }
-});
-/*
-app.patch('/api/toggle-status/:orderId', (req, res) => {
-    const ordersData = JSON.parse(fs.readFileSync('orders.json'));
-    const order = ordersData.find(o => o.id == req.params.orderId);
 
-    if (order) {
-        order.status = order.status ? null : 'בוצע'; // מחליף את הסטטוס
-        try {
-            fs.writeFileSync('orders.json', JSON.stringify(ordersData, null, 2));
-            res.json(order);
-        } catch (error) {
-            console.error("Error updating order status:", error);
-            res.status(500).send('שגיאה בעדכון הסטטוס');
-        }
-    } else {
-        res.status(404).send('הזמנה לא נמצאה');
-    }
-});
-*/
 // Endpoint למחיקת הזמנה
 app.delete('/api/delete-order/:orderId', (req, res) => {
     let ordersData = JSON.parse(fs.readFileSync('orders.json'));
@@ -376,47 +362,7 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 // מסלול לשמירת הזמנה
-app.post('/api/place-order', (req, res) => {
-    const orderDetails = req.body;
-    
-    // שמירת ההזמנה ב-JSON
-    const ordersFile = './orders.json';
-    let orders = [];
-    if (fs.existsSync(ordersFile)) {
-        const data = fs.readFileSync(ordersFile);
-        orders = JSON.parse(data);
-    }
-    orders.push(orderDetails);
-    fs.writeFileSync(ordersFile, JSON.stringify(orders, null, 2));
 
-    // שליחת אימייל
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'abrahem.zbedat9@gmail.com', // החלף באימייל שלך
-            pass: 'fzcw zkwx xgsg mahk' // החלף בסיסמה שלך
-        }
-    });
-
-  
-
-    const mailOptions = {
-        from: 'abrahem.zbedat9@gmail.com',
-        to: 'abrahem.zbedat9@gmail.com',
-        subject: 'הזמנתך התקבלה - Marwa Fashion Store',
-        text: `שלום ${orderDetails.name},\nתודה על הזמנתך ב-Marwa Fashion Store!\nסכום לתשלום: ₪${orderDetails.total}.\nהפריטים שהוזמנו:\n${orderDetails.items.map(item => item.name).join(', ')}.\n\nכתובת למשלוח: ${orderDetails.address}, ${orderDetails.city}, ${orderDetails.postalCode}.`
-    };
-
-    transporter.sendMail(mailOptions, function(error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-    });
-
-    res.json({ orderId: orders.length }); // מחזיר את מספר ההזמנה
-});
 
 /******************************* */
 const ordersFilePath = path.join(__dirname, 'orders.json');
@@ -431,45 +377,41 @@ fs.readFile(ordersFilePath, 'utf-8', (err, data) => {
 });
 
 
+
 app.patch('/api/toggle-status/:orderId', (req, res) => {
     const orderId = req.params.orderId;
-    const order = orders.find(o => o.id == orderId);
+    console.log('Received request to toggle status for order ID:', orderId);
+
+    const order = orders.find(o => o.id == orderId); // חיפוש ההזמנה לפי מזהה
 
     if (order) {
+        // החלפת הסטטוס להזמנה
         order.status = order.status === 'בוצע' ? 'לא בוצע' : 'בוצע';
+        console.log('Order found, new status:', order.status);
 
-        // Save the updated orders to the JSON file
+        // כתיבה מחדש של ההזמנות לקובץ JSON
         fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2), (err) => {
             if (err) {
-                res.status(500).json({ message: 'Error saving updated orders.' });
-            } else {
-                res.status(200).json({ message: 'סטטוס עודכן בהצלחה.' });
+                console.error('Error saving file:', err); // לוג נוסף אם יש שגיאה בכתיבה
+                return res.status(500).json({ message: 'Error saving updated orders.' });
             }
+
+            console.log('Order status updated successfully');
+            res.status(200).json({ message: 'סטטוס עודכן בהצלחה.' });
         });
     } else {
+        console.error('Order not found');
         res.status(404).json({ message: 'ההזמנה לא נמצאה.' });
+
+
     }
+
+    console.log('Toggling status for order ID:', orderId);
+
 });
 
 /********************************** */
-function readOrders() {
-    return new Promise((resolve, reject) => {
-        fs.readFile(ordersFilePath, 'utf8', (err, data) => {
-            if (err) reject(err);
-            else resolve(JSON.parse(data));
-        });
-    });
-}
 
-// Utility function to write orders to JSON file
-function writeOrders(orders) {
-    return new Promise((resolve, reject) => {
-        fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2), 'utf8', (err) => {
-            if (err) reject(err);
-            else resolve();
-        });
-    });
-}
 
 // Get all orders
 app.get('/api/get-orders', async (req, res) => {
@@ -481,23 +423,7 @@ app.get('/api/get-orders', async (req, res) => {
     }
 });
 
-// Return multiple orders to uncompleted status
-app.post('/api/return-orders', async (req, res) => {
-    try {
-        const orders = await readOrders();
-        const orderIds = req.body.orderIds;
-        orderIds.forEach(id => {
-            const order = orders.find(o => o.id === parseInt(id, 10));
-            if (order) {
-                order.status = 'לא בוצע'; // Set status to 'not completed'
-            }
-        });
-        await writeOrders(orders);
-        res.status(200).send('Orders status updated');
-    } catch (err) {
-        res.status(500).send('Error updating order statuses');
-    }
-});
+
 
 // הפעלת השרת
 app.listen(3000, () => {

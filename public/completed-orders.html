@@ -95,34 +95,44 @@
                 alert('שגיאה בהשגת ההזמנות.');
             }
         });
-
         function displayOrders(orders) {
-            const ordersListDiv = document.getElementById('orders-list');
+    const ordersListDiv = document.getElementById('orders-list');
 
-            if (orders.length === 0) {
-                ordersListDiv.innerHTML = '<p>לא נמצאו הזמנות שבוצעו.</p>';
-            } else {
-                const ordersHTML = orders.map(order => 
-                    `<div class="order">
-                        <h3>הזמנה #${order.id}</h3>
-                        <p>שם: ${order.name}</p>
-                        <p>אימייל: ${order.email}</p>
-                        <p>טלפון: ${order.phone}</p>
-                        <p>כתובת: ${order.address}, ${order.city}, ${order.postalCode}</p>
-                        <p>שיטת תשלום: ${order.paymentMethod}</p>
-                        <h4>פריטים שהוזמנו:</h4>
-                        <ul>${order.items.map(item => 
-                            `<li>
-                                ${item.title} - ₪${item.price} 
-                                <img src="${item.image}" alt="${item.title}" style="width: 100px; height: auto;">
-                            </li>`).join('')}
-                        </ul>
-                        <p>סטטוס: ${order.status || 'לא בוצע'}</p>
-                    </div>`
-                ).join('');
-                ordersListDiv.innerHTML = ordersHTML;
-            }
-        }
+    if (orders.length === 0) {
+        ordersListDiv.innerHTML = '<p>לא נמצאו הזמנות.</p>';
+    } else {
+        const ordersHTML = orders.map(order => {
+            // חישוב סך הכל מחיר של המוצרים
+            const totalPrice = order.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const shippingCost = 35; // עלות משלוח קבועה
+            const finalPrice = totalPrice + shippingCost;
+
+            return `
+                <div class="order">
+                    <h3>הזמנה #${order.id}</h3>
+                    <p>שם: ${order.name}</p>
+                    <p>אימייל: ${order.email}</p>
+                    <p>טלפון: ${order.phone}</p>
+                    <p>תאריך הזמנה: ${new Date(order.orderDate).toLocaleDateString('he-IL')}</p>
+                    <p>כתובת: ${order.address}, ${order.city}, ${order.postalCode}</p>
+                    <p>שיטת תשלום: ${order.paymentMethod}</p>
+                    <h4>פריטים שהוזמנו:</h4>
+                    <ul>${order.items.map(item => `
+                        <li>
+                            ${item.title} - ₪${item.price} (כמות: ${item.quantity}) 
+                            <img src="${item.image}" alt="${item.title}" style="width: 100px; height: auto;">
+                        </li>`).join('')}
+                    </ul>
+                    <p>עלות משלוח: ₪${shippingCost}</p>
+                    <p>סך הכל מחיר הזמנה (כולל משלוח): ₪${finalPrice.toFixed(2)}</p>
+                    <p>סטטוס: ${order.status || 'לא בוצע'}</p>
+                   
+                </div>
+            `;
+        }).join('');
+        ordersListDiv.innerHTML = ordersHTML;
+    }
+}
     </script>
 </body>
 </html>

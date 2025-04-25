@@ -154,45 +154,65 @@
         });
 
         function displayOrders(orders) {
-            const ordersListDiv = document.getElementById('orders-list');
+    const ordersListDiv = document.getElementById('orders-list');
 
-            if (orders.length === 0) {
-                ordersListDiv.innerHTML = '<p>לא נמצאו הזמנות.</p>';
-            } else {
-                const ordersHTML = orders.map(order => 
-                    `<div class="order">
-                        <h3>הזמנה #${order.id}</h3>
-                        <p>שם: ${order.name}</p>
-                        <p>אימייל: ${order.email}</p>
-                        <p>טלפון: ${order.phone}</p>
-                        <p>כתובת: ${order.address}, ${order.city}, ${order.postalCode}</p>
-                        <p>שיטת תשלום: ${order.paymentMethod}</p>
-                        <h4>פריטים שהוזמנו:</h4>
-                        <ul>${order.items.map(item => 
-                            `<li>
-                                ${item.title} - ₪${item.price} 
-                                <img src="${item.image}" alt="${item.title}" style="width: 100px; height: auto;">
-                            </li>`).join('')}
-                        </ul>
-                        <p>סטטוס: ${order.status || 'לא בוצע'}</p>
-                        <button onclick="toggleStatus(${order.id})">
-                            ${order.status ? 'סמן כלא בוצע' : 'סמן כבוצע'}
-                        </button>
-                        <button onclick="deleteOrder(${order.id})" class="delete-button">מחק הזמנה</button>
-                    </div>`
-                ).join('');
-                ordersListDiv.innerHTML = ordersHTML;
-            }
-        }
+    if (orders.length === 0) {
+        ordersListDiv.innerHTML = '<p>לא נמצאו הזמנות.</p>';
+    } else {
+        const ordersHTML = orders.map(order => {
+            // חישוב סך הכל מחיר של המוצרים
+            const totalPrice = order.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const shippingCost = 35; // עלות משלוח קבועה
+            const finalPrice = totalPrice + shippingCost;
 
-        async function toggleStatus(orderId) {
-            const response = await fetch(`/api/toggle-status/${orderId}`, { method: 'PATCH' });
-            if (response.ok) {
-                location.reload();
-            } else {
-                alert('שגיאה בעדכון הסטטוס.');
-            }
+            return `
+                <div class="order">
+                    <h3>הזמנה #${order.id}</h3>
+                    <p>שם: ${order.name}</p>
+                    <p>אימייל: ${order.email}</p>
+                    <p>טלפון: ${order.phone}</p>
+                    <p>כתובת: ${order.address}, ${order.city}, ${order.postalCode}</p>
+                    <p>שיטת תשלום: ${order.paymentMethod}</p>
+                    <p>תאריך הזמנה: ${new Date(order.orderDate).toLocaleDateString('he-IL')}</p>
+                    <h4>פריטים שהוזמנו:</h4>
+                    <ul>${order.items.map(item => `
+                        <li>
+                            ${item.title} - ₪${item.price} (כמות: ${item.quantity}) 
+                            <img src="${item.image}" alt="${item.title}" style="width: 100px; height: auto;">
+                        </li>`).join('')}
+                    </ul>
+                    <p>עלות משלוח: ₪${shippingCost}</p>
+                    <p>סך הכל מחיר הזמנה (כולל משלוח): ₪${finalPrice.toFixed(2)}</p>
+                    <p>סטטוס: ${order.status || 'לא בוצע'}</p>
+                    <button onclick="toggleStatus(${order.id})">
+                        ${order.status ? 'סמן כלא בוצע' : 'סמן כבוצע'}
+                    </button>
+                    <button onclick="deleteOrder(${order.id})" class="delete-button">מחק הזמנה</button>
+                </div>
+            `;
+        }).join('');
+        ordersListDiv.innerHTML = ordersHTML;
+    }
+}
+
+
+    async function toggleStatus(orderId) {
+    try {
+        const response = await fetch(`/api/toggle-status/${orderId}`, {
+            method: 'PATCH'
+        });
+        if (response.ok) {
+            location.href = '/completed-orders.html'; // העברה לדף ההזמנות שהושלמו
+        } else {
+            const error = await response.json();
+            console.error('Error updating status:', error.message);
+            alert('שגיאה בעדכון הסטטוס: ' + error.message); // הצגת שגיאה מדויקת
         }
+    } catch (err) {
+        console.error('Fetch error:', err);
+        alert('שגיאה בחיבור לשרת.');
+    }
+}
 
         async function deleteOrder(orderId) {
             const response = await fetch(`/api/delete-order/${orderId}`, { method: 'DELETE' });

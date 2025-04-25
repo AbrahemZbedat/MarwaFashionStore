@@ -91,11 +91,19 @@
         }
 
         function updateQuantity(index, quantity) {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            cart[index].quantity = parseInt(quantity);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateTotal();
-        }
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    quantity = parseInt(quantity);
+
+    if (quantity < 1) {
+        quantity = 1; // מחזיר את הכמות ל-1 אם המשתמש ניסה להזין כמות שלילית או אפס
+    }
+
+    cart[index].quantity = quantity;
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateTotal();
+    loadCartItems(); // מרענן את הצגת הפריטים אחרי העדכון
+}
+
 
         function removeCartItem(index) {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];

@@ -56,6 +56,13 @@
             margin-left: 10px;
             border-radius: 4px;
         }
+
+        .total {
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -72,6 +79,22 @@
                 const order = await response.json();
                 const orderDetailsDiv = document.getElementById('order-details');
 
+                let totalPrice = 0; // משתנה לסך הכול המחיר של כל המוצרים
+
+                const itemsHtml = order.items.map(item => {
+                    const itemTotal = item.price * item.quantity;
+                    totalPrice += itemTotal;
+                    return `
+                        <li>
+                            ${item.title} - ₪${item.price} (כמות: ${item.quantity}) 
+                            <img src="${item.image}" alt="${item.title}" style="width: 100px; height: auto;">
+                        </li>
+                    `;
+                }).join('');
+
+                const shippingCost = 35; // נניח שיש שדה כזה או שאפשר להוסיף אותו לשרת
+                const finalTotal = totalPrice + shippingCost;
+
                 orderDetailsDiv.innerHTML = `
                     <h3>פרטי ההזמנה</h3>
                     <p>שם: ${order.name}</p>
@@ -81,12 +104,10 @@
                     <p>כתובת: ${order.address}, ${order.city}, ${order.postalCode}</p>
                     <p>שיטת תשלום: ${order.paymentMethod}</p>
                     <h3>פריטים שהוזמנו</h3>
-                    <ul>${order.items.map(item => `
-                        <li>
-                            ${item.title} - ₪${item.price} 
-                            <img src="${item.image}" alt="${item.title}" style="width: 100px; height: auto;">
-                        </li>`).join('')}
-                    </ul>
+                    <ul>${itemsHtml}</ul>
+                    <p class="total">סך הכול מחיר (ללא משלוח): ₪${totalPrice}</p>
+                    <p class="total">עלות משלוח: ₪${shippingCost}</p>
+                    <p class="total">סך הכול לתשלום כולל משלוח: ₪${finalTotal}</p>
                 `;
             } else {
                 alert('שגיאה בהשגת פרטי ההזמנה.');
