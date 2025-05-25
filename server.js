@@ -247,7 +247,7 @@ const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'abrahem.zbedat9@gmail.com', // החלף במייל שלך
-        pass: 'fzcw zkwx xgsg mahk'
+        pass: 'Enter your pass'
     }
 });
 
