@@ -27,8 +27,34 @@
         </nav>
     </header>
 
+<!-- Search and Filter -->
+<div class="filter-container">
+    <input type="text" id="searchInput" placeholder="חפש לפי שם מוצר..." />
+
+    <select id="brandFilter">
+        <option value="">כל המותגים</option>
+        <option value="NIKE">NIKE</option>
+        <option value="FRED PERRY">FRED PERRY</option>
+        <option value="ADIDAS">ADIDAS</option>
+    </select>
+
+    <select id="categoryFilter">
+        <option value="">כל הקבוצות</option>
+        <option value="T-SHIRT">T-SHIRT</option>
+        <option value="SHOES">SHOES</option>
+        <option value="HOODIE">HOODIE</option>
+    </select>
+
+    <select id="priceFilter">
+        <option value="">כל המחירים</option>
+        <option value="low">מחיר נמוך לגבוה</option>
+        <option value="high">מחיר גבוה לנמוך</option>
+    </select>
+</div>
+
+
 <section class="container content-section women">
-    <h2 class="section-header">FEMALE CLOTHES</h2>
+<h2 class="section-header" id="sectionTitle"></h2>
     <div class="shop-items">
         <% products.forEach(product => { %>
             <div class="shop-item">
@@ -374,7 +400,187 @@ margin: 7px;
 }
 
 }
+  .filter-container {
+    direction: rtl;
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 25px;
+    background: linear-gradient(to left, #ffffff, #f6f6f6);
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
 
+  .filter-container input[type="text"],
+  .filter-container select {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-family: "Segoe UI", sans-serif;
+    border: 1.5px solid #ddd;
+    border-radius: 30px;
+    min-width: 200px;
+    background-color: #fff;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+    appearance: none;
+  }
+
+  .filter-container input[type="text"]:focus,
+  .filter-container select:focus {
+    border-color: #ff4081;
+    box-shadow: 0 0 10px rgba(255, 64, 129, 0.3);
+    outline: none;
+  }
+
+  .filter-container input[type="text"]::placeholder {
+    color: #aaa;
+  }
+
+  .filter-container select {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23999" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: left 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+  }
+
+ @media (max-width: 768px) {
+  .filter-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    padding: 20px 15px;
+    margin: 20px 10px;
+    border-radius: 12px;
+  }
+
+  .filter-container input,
+  .filter-container select {
+    width: 85%;
+    font-size: 15px;
+    margin-right: 7%;
+    min-width: unset;
+    padding: 12px 16px;
+    border-radius: 20px;
+  }
+
+  .filter-container select {
+    padding-right: 36px;
+    background-position: left 10px center;
+  }
+}
+  #sectionTitle {
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32px;
+    margin-top: 20px;
+}
 
 
 </style>
+
+<script>
+    const allProducts = <%- JSON.stringify(products) %>;
+
+    const shopItemsContainer = document.querySelector('.shop-items');
+
+    function renderItems(items) {
+        shopItemsContainer.innerHTML = items.map(product => `
+            <div class="shop-item">
+                <span class="shop-item-title">${product.title}</span>
+                <img class="shop-item-image" src="/images/${product.images[0]}" alt="${product.title}" onclick="location.href='/item/${product.id}'">
+                <p class="shop-item-price"><b> ₪${product.price} </b></p>
+                <div class="shop-item-details">
+                    <button id="view-details" class="btn btn-primary shop-item-button" type="button" onclick="location.href='/item/${product.id}'">VIEW DETAILS</button><br>
+                    <a href="cart.html"><button id="view-cart" class="btn btn-primary shop-item-button">VIEW CART</button></a>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // סינון
+    function applyFilters() {
+        const search = document.getElementById('searchInput').value.toLowerCase();
+        const brand = document.getElementById('brandFilter').value;
+        const category = document.getElementById('categoryFilter').value;
+        const priceSort = document.getElementById('priceFilter').value;
+
+        let filtered = allProducts.filter(p => {
+            return (
+                p.title.toLowerCase().includes(search) &&
+                (brand === "" || p.brand === brand) &&
+                (category === "" || p.category === category)
+            );
+        });
+
+        // מיון לפי מחיר
+        if (priceSort === "low") {
+            filtered.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+        } else if (priceSort === "high") {
+            filtered.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+        }
+
+        renderItems(filtered);
+    }
+
+    // מאזינים לשדות הסינון
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+    document.getElementById('brandFilter').addEventListener('change', applyFilters);
+    document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+    document.getElementById('priceFilter').addEventListener('change', applyFilters);
+
+    // רנדר ראשוני
+    renderItems(allProducts);
+
+
+
+
+    // עדכון כותרת דינמית לפי קטגוריה
+const sectionTitle = document.getElementById('sectionTitle');
+if (category) {
+    sectionTitle.textContent = category;
+} else {
+    sectionTitle.textContent = ''; // ריק אם נבחר "כל הקבוצות"
+}
+
+
+
+function applyFilters() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const brand = document.getElementById('brandFilter').value;
+    const category = document.getElementById('categoryFilter').value;
+    const priceSort = document.getElementById('priceFilter').value;
+
+    let filtered = allProducts.filter(p => {
+        return (
+            p.title.toLowerCase().includes(search) &&
+            (brand === "" || p.brand === brand) &&
+            (category === "" || p.category === category)
+        );
+    });
+
+    // מיון לפי מחיר
+    if (priceSort === "low") {
+        filtered.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+    } else if (priceSort === "high") {
+        filtered.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+    }
+
+    // עדכון כותרת
+    const sectionTitle = document.getElementById('sectionTitle');
+    if (category) {
+        sectionTitle.textContent = category;
+    } else {
+        sectionTitle.textContent = '';
+    }
+
+    renderItems(filtered);
+}
+
+</script>
+
+

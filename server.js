@@ -119,12 +119,11 @@ function saveProducts(products) {
 }
 
 /**************** */
-// נתיב להוספת פריט
 app.post('/add-item', upload.array('images'), (req, res) => {
-    const { title, price, sizes, colors } = req.body;
+    const { title, price, sizes, colors, brand, category } = req.body;
     const images = req.files ? req.files.map(file => file.filename) : [];
 
-    if (!title || !price || !sizes || !colors) {
+    if (!title || !price || !sizes || !colors || !brand || !category) {
         return res.status(400).json({ success: false, message: 'All fields are required' });
     }
 
@@ -135,6 +134,8 @@ app.post('/add-item', upload.array('images'), (req, res) => {
         price,
         sizes: sizes.split(','),
         colors: colors.split(','),
+        brand,
+        category,
         images
     };
 
@@ -142,34 +143,6 @@ app.post('/add-item', upload.array('images'), (req, res) => {
     fs.writeFileSync(path.join(__dirname, 'products.json'), JSON.stringify(products, null, 2));
     res.json({ success: true });
 });
-
-// נתיב לעדכון פריט
-app.post('/update-item', upload.array('images'), (req, res) => {
-    const { id, title, price, sizes, colors } = req.body;
-    const images = req.files ? req.files.map(file => file.filename) : [];
-
-    if (!id) {
-        return res.status(400).json({ success: false, message: 'Item ID is required' });
-    }
-
-    const products = readProducts();
-    const productIndex = products.findIndex(p => p.id === parseInt(id));
-
-    if (productIndex === -1) return res.status(404).json({ success: false });
-
-    products[productIndex] = {
-        ...products[productIndex],
-        title: title || products[productIndex].title,
-        price: price || products[productIndex].price,
-        sizes: sizes ? sizes.split(',') : products[productIndex].sizes,
-        colors: colors ? colors.split(',') : products[productIndex].colors,
-        images: images.length ? images : products[productIndex].images
-    };
-
-    fs.writeFileSync(path.join(__dirname, 'products.json'), JSON.stringify(products, null, 2));
-    res.json({ success: true });
-});
-
 
 
 app.use(express.urlencoded({ extended: true }));

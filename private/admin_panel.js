@@ -18,34 +18,34 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(err => console.error(err));
     }
+addItemForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(addItemForm);
+    const data = {
+        title: formData.get('title'),
+        price: formData.get('price'),
+        sizes: formData.get('sizes'),
+        colors: formData.get('colors'),
+        brand: formData.get('brand'),
+        category: formData.get('category'),
+        images: formData.getAll('images') // זה לא יפעל עם JSON, ראה הערה בהמשך
+    };
 
-    // הוספת פריט חדש
-    addItemForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const formData = new FormData(addItemForm);
-        const data = {
-            title: formData.get('title'),
-            price: formData.get('price'),
-            sizes: formData.get('sizes'),
-            colors: formData.get('colors'),
-            images: formData.getAll('images') // assuming image upload
-        };
-
-        fetch('/add-item', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.success) {
-                loadItems(); // טען מחדש את הפריטים
-            } else {
-                alert(result.message);
-            }
-        })
-        .catch(err => console.error(err));
-    });
+    // כדי לשלוח קבצים, צריך לשלוח את formData ולא JSON
+    fetch('/add-item', {
+        method: 'POST',
+        body: formData // שלח את כל הפורם כ-FormData כולל קבצים
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            loadItems(); // טען מחדש את הפריטים
+        } else {
+            alert(result.message);
+        }
+    })
+    .catch(err => console.error(err));
+});
 
     // עדכון פריט קיים
     updateItemForm.addEventListener('submit', (e) => {
