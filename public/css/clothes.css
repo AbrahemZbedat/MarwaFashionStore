@@ -123,7 +123,7 @@ h1 strong {
 }
 
 .container {
-  max-width: 900px;
+  max-width: 85%;
   margin: 0 auto;
   padding: 0 1.5em;
 }
@@ -161,60 +161,112 @@ h1 strong {
 }
 
 .women {
-  background-color: rgba(231, 215, 147, 0.6);
+  background-color: rgba(199, 193, 76, 0.162);
+}
+.shop-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  justify-items: center;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 .shop-item {
-  margin: 40px;
+  position: relative; /* חשוב! מאפשר למקם את הכפתור בזווית */
+  display: flex;
+  flex-direction: column;
+  background-color: #fdfdfd;
+  border-radius: 3px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+  width: 100%;
+  max-width: 100%;
+  min-height: 500px;
 }
 
-.shop-item-title {
-  display: block;
+.shop-item:hover {
+  transform: scale(1.03);
+}
+
+.shop-item-image-container {
   width: 100%;
-  text-align: center;
-  font-weight: bold;
-  font-size: 1.5em;
-  color: #333;
-  margin-bottom: 15px;
+  height: 70%; /* גובה יחסי מהכרטיס */
+  overflow: hidden;
 }
 
 .shop-item-image {
-  height: 250px;
-  max-width: 240px;
-  cursor:grab;
-  border-radius: 12px;
+  width: 100%;
+  height: 70%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.shop-item-title {
+  margin-top: 7%;
+  margin-bottom: -2%;
+  font-size: 1em;
+  color: #000000;
+  text-align: right; /* אם אתה רוצה יישור לימין */
+    margin-right: 3%;
 
 }
 
-.shop-item-details {
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  margin-top: 15px;
-}
-
-.shop-item-details .btn {
-  margin: auto;
-}
 
 .shop-item-price {
-  text-align: center;
-  color: chocolate;
-  font-size: 1.3em;
-  margin-bottom: 0;
-  height: 2px;
-  margin-top: 0;
+  color: #000000;
+  font-size: 1em;
+  text-align: right;
+  margin-right: 3%;
+  margin-bottom: 2%;
 }
 
-.shop-item-price b {
-  text-align: center;
-  color: chocolate;
+.shop-item-new {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 4px 10px;
+
+  color: rgb(220, 0, 0);
+  
+  font-size: 0.9em;
+  text-align: right;
 }
 
-.shop-items {
+
+.shop-item-button:hover {
+  background-color: #555;
+}
+
+.shop-item-button {
+  width: 100%;
+}
+.add-to-cart-btn {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background-color: #d7f64c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 18px;
+  cursor: pointer;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: background-color 0.3s ease;
+  z-index: 2; /* רק למקרה שמשהו מכסה אותו */
+}
+
+.add-to-cart-btn:hover {
+  background-color: #218838;
+}
+
+.add-to-cart-btn i {
+  font-size: 20px;
 }
 
 .cart-header {
@@ -302,7 +354,7 @@ h1 strong {
 }
 
 .cart-total-title {
-  font-weight: bold;
+ 
   font-size: 1.5em;
   color: black;
   margin-right: 20px;

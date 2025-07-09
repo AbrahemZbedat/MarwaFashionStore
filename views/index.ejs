@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/css/clothes.css">
     <link rel="stylesheet" href="/css/mystyles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="index.js" defer></script>
     <link rel="icon" href="imgs/logo.png">
@@ -51,23 +53,39 @@
         <option value="high">מחיר גבוה לנמוך</option>
     </select>
 </div>
-
-
 <section class="container content-section women">
-<h2 class="section-header" id="sectionTitle"></h2>
-    <div class="shop-items">
-        <% products.forEach(product => { %>
-            <div class="shop-item">
-                <span class="shop-item-title"><%= product.title %></span>
-                <img class="shop-item-image" src="/images/<%= product.images[0] %>" alt="<%= product.title %>" onclick="location.href='/item/<%= product.id %>'">
-                <p class="shop-item-price"> <b> ₪<%= product.price %> </b> </p>
-                <div class="shop-item-details">
-                    <button id="view-details" class="btn btn-primary shop-item-button" type="button" onclick="location.href='/item/<%= product.id %>'">VIEW DETAILS</button><br>
-                    <a href="cart.html"><button id="view-cart" class="btn btn-primary shop-item-button">VIEW CART</button></a>
-                </div>
-            </div>
-        <% }); %>
+  <h2 class="section-header" id="sectionTitle">PRODUCTS</h2>
+<div class="shop-items">
+  <% products.forEach(product => { %>
+    <div class="shop-item">
+      <div class="shop-item-image-container">
+        <img class="shop-item-image" src="/images/<%= product.images[0] %>" alt="<%= product.title %>" onclick="location.href='/item/<%= product.id %>'">
+      </div>
+      <span class="shop-item-title"><%= product.title %></span>
+      <p class="shop-item-price"><b>₪<%= product.price %></b></p>
+      <span class="shop-item-new">NEW</span>
+
+      <!-- כפתור עם אייקון סל -->
+      <button class="add-to-cart-btn" onclick="addToCart(<%= product.id %>)" title="הוסף לסל">
+        <i class="fas fa-cart-plus"></i>
+      </button>
     </div>
+  <% }) %>
+</div>
+
+
+
+
+  <!-- פאגינציה -->
+  <div class="pagination">
+    <% for (let i = 1; i <= totalPages; i++) { %>
+      <% if (i === currentPage) { %>
+        <span class="current-page"><%= i %></span>
+      <% } else { %>
+        <a href="/?page=<%= i %>"><%= i %></a>
+      <% } %>
+    <% } %>
+  </div>
 </section>
 
     
@@ -106,7 +124,27 @@
 </html>
 
 <style> 
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 30px 0;
+}
 
+.pagination a,
+.pagination .current-page {
+  padding: 8px 12px;
+  border: 1px solid #999;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #333;
+  background-color: #f4f4f4;
+}
+
+.pagination .current-page {
+  font-weight: bold;
+  background-color: #ccc;
+}
 .nav-container {
     display: flex;
     justify-content: flex-end; /* Align items to the right */
@@ -147,21 +185,9 @@
 }
 
 
-.shop-item-details {
 
 
-}
-.shop-item-details .btn {
 
-margin: 7px;
-
-}
-
-.shop-item-image{
-    width: 96%; /* Ensure the image takes the full width of the container */
-    height: 240px; /* Set a fixed height for all images */
-    margin-left: 10px;
-}
 /* Mobile Styles */
 @media only screen and (max-width: 800px) {
     .toggle-button {
@@ -254,25 +280,7 @@ margin: 7px;
         font-size: 1.0em;
     }
 
-    .shop-item-details {
-        margin-top: 0px; /* Space above the button */
-        width: 97%; /* Ensure the details section takes full width */
-        margin-left: 55px;
-        
-      
-    }
-
-    .shop-item-details .btn {
-        margin: 0; /* Remove margin for better alignment */
-        padding: 9px 10px; /* Adjust padding for a smaller button */
-        font-size: 0.5em; /* Adjust text size to be smaller */
-        width: auto; /* Set width to auto for better sizing */
-        box-sizing: border-box; /* Ensure padding doesn't affect button size */
-        border: none; /* No border */
-        border-radius: 4px; /* Rounded corners */
-        cursor: pointer; /* Pointer cursor */
-    }
-
+    
     #view-cart {
         display: none; /* Hide the "View Cart" button */
     }
@@ -323,40 +331,7 @@ margin: 7px;
         font-size: 1.0em;
     }
 
-    .shop-item-details {
-        margin-top: 0px; /* Space above the button */
-        width: 97%; /* Ensure the details section takes full width */
-     margin-right: 170px;
-        
-      
-    }
 
-}
-
-
-@media (max-width: 1024px) {
-
-
-
-    .shop-item-details {
-        margin-top: 0px; /* Space above the button */
-        width: 97%; /* Ensure the details section takes full width */
-        
-    }
-
-}
-
-
-
-@media (max-width: 768px) {
-
-
-
-.shop-item-details {
-    margin-top: 0px; /* Space above the button */
-    width: 97%; /* Ensure the details section takes full width */
-    margin-right: 30px;
-}
 
 }
 
@@ -365,39 +340,14 @@ margin: 7px;
 
 
 
-@media (max-width: 900px) {
 
 
 
-.shop-item-details {
-    margin-top: 0px; /* Space above the button */
-    width: 97%; /* Ensure the details section takes full width */
-    margin-left: 100px;
-}
-
-}
-
-@media (max-width: 400px) {
-
-
-
-.shop-item-details {
-    margin-top: 0px; /* Space above the button */
-    width: 97%; /* Ensure the details section takes full width */
-    margin-left: 86px;
-}
-
-}
 
 @media (max-width: 360px) {
 
 
 
-.shop-item-details {
-    margin-top: 0px; /* Space above the button */
-    width: 97%; /* Ensure the details section takes full width */
-    margin-left: 70px;
-}
 
 }
   .filter-container {
@@ -491,16 +441,66 @@ margin: 7px;
     function renderItems(items) {
         shopItemsContainer.innerHTML = items.map(product => `
             <div class="shop-item">
-                <span class="shop-item-title">${product.title}</span>
+                
                 <img class="shop-item-image" src="/images/${product.images[0]}" alt="${product.title}" onclick="location.href='/item/${product.id}'">
-                <p class="shop-item-price"><b> ₪${product.price} </b></p>
-                <div class="shop-item-details">
-                    <button id="view-details" class="btn btn-primary shop-item-button" type="button" onclick="location.href='/item/${product.id}'">VIEW DETAILS</button><br>
-                    <a href="cart.html"><button id="view-cart" class="btn btn-primary shop-item-button">VIEW CART</button></a>
-                </div>
+                                <span class="shop-item-title">${product.title}</span>
+
+                <p class="shop-item-price"> ₪${product.price} </p>
+
+                      <span class="shop-item-new">NEW</span>
+
+                        <button class="add-to-cart-btn" onclick="addToCart(${product.id})"
+" title="הוסף לסל">
+        <i class="fas fa-cart-plus"></i>
+      </button>
+
+              
             </div>
         `).join('');
     }
+
+  const products = <%- JSON.stringify(products) %>;
+function addToCart(productId) {
+    // נביא את המוצר מתוך products
+    const product = products.find(p => p.id === productId);
+
+    if (!product) {
+        console.error("המוצר לא נמצא במערך products");
+        return;
+    }
+
+    // נוודא שהתמונה קיימת, אם לא – ניתן תמונת ברירת מחדל
+  
+
+    const selectedColor = "שחור";
+    const selectedSize = "M";
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    const existingItem = cart.find(item =>
+        item.id === productId &&
+        item.color === selectedColor &&
+        item.size === selectedSize
+    );
+
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: product.id,
+            title: product.title,
+            price: parseFloat(product.price),
+            image: `/images/${product.images[0]}`,
+            color: selectedColor,
+            size: selectedSize,
+            quantity: 1
+        });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert("המוצר נוסף לסל!");
+}
+
 
     // סינון
     function applyFilters() {
@@ -581,6 +581,6 @@ function applyFilters() {
     renderItems(filtered);
 }
 
+
+
 </script>
-
-

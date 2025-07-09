@@ -127,7 +127,7 @@ app.post('/add-item', upload.array('images'), (req, res) => {
         return res.status(400).json({ success: false, message: 'All fields are required' });
     }
 
-    const products = readProducts();
+    const products = readProducts1();
     const newItem = {
         id: products.length ? products[products.length - 1].id + 1 : 1,
         title,
@@ -174,20 +174,45 @@ app.post('/delete-item', express.urlencoded({ extended: true }), (req, res) => {
 //end admin panel section
 /******************************************************************************************************************** */
 
+// קריאת מוצרים מקובץ או מאגר כלשהו
+const readProducts1 = () => {
+  // לדוגמה: החזר מערך של מוצרים
+  return require('./products.json'); // אתה יכול להתאים את זה בהתאם למבנה שלך
+};
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static('public'));
+
 app.get('/', (req, res) => {
-    const products = readProducts();
-    res.render('index', { products });
+  const products = readProducts1();
+  const page = parseInt(req.query.page) || 1;
+  const itemsPerPage = 20;
+
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const paginatedProducts = products.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+
+  res.render('index', {
+    products: paginatedProducts,
+    currentPage: page,
+    totalPages: totalPages
+  });
 });
-// נתיב לדף הפרטים של מוצר
+
+// דף פרטים למוצר
 app.get('/item/:id', (req, res) => {
-    const products = readProducts();
-    const productId = parseInt(req.params.id);
-    const product = products.find(p => p.id === productId);
-    if (product) {
-        res.render('item', { product });
-    } else {
-        res.status(404).send('ITEM NOT FOUND');
-    }
+  const products = readProducts1();
+  const productId = parseInt(req.params.id);
+  const product = products.find(p => p.id === productId);
+
+  if (product) {
+    res.render('item', { product });
+  } else {
+    res.status(404).send('ITEM NOT FOUND');
+  }
 });
 // Serve static files (e.g., CSS, images, etc.)
 app.use(express.static('public'));
