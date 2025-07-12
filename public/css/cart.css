@@ -4,11 +4,20 @@
     height: auto; /* Remove fixed height */
     padding: 0; /* Remove any additional padding */
 }
+.btn-danger{
+
+
+    margin-right: 10%;
+}
+
+
+
 
 #content-section {
     padding-top: 20px; /* Add small padding to the top */
     margin-top: 0; /* Ensure no margin on top */
     min-height: calc(100vh - 100px); /* Adjust based on the header/footer height */
+    max-width: 70%;
 }
 
 body, html {
@@ -140,5 +149,28 @@ nav {
     .cart-quantity {
         width: 100%; /* Make each item take full width */
         margin-bottom: 10px; /* Add some space between items */
+    }
+}
+
+.cart-item-title{
+    margin-right: 5%;
+}
+
+
+.cart-row {
+  direction: rtl;
+}
+
+
+.cart-total{
+
+      flex-direction: row-reverse;
+      
+}
+
+/* מובייל */
+@media (max-width: 768px) {
+    .cart-row {
+        flex-direction: column-reverse;
     }
 }

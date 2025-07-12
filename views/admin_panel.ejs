@@ -83,7 +83,28 @@
         
         <button type="submit">Delete Item</button>
     </form>
+
+
     
-    
+  <h1>הוספת מודעה חדשה</h1>
+  <form action="/add-ad" method="POST">
+    <input type="text" name="newAd" placeholder="הקלד מודעה חדשה" required>
+    <button type="submit">הוסף</button>
+  </form>
+<h2>📋 מודעות קיימות:</h2>
+<ul>
+  <% ads.forEach((ad, index) => { %>
+    <li>
+      <%= ad %>
+      <form action="/delete-ad" method="POST" style="display:inline;">
+        <input type="hidden" name="index" value="<%= index %>">
+        <button type="submit">🗑️ מחק</button>
+      </form>
+    </li>
+  <% }) %>
+</ul>
+
 </body>
+
+
 </html>

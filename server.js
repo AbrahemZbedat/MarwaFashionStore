@@ -78,11 +78,6 @@ function readProducts() {
 }
 
 // Route to get products
-app.get('/products', (req, res) => {
-    const products = readProducts();
-    res.json(products);
-});
-
 
 
 
@@ -183,24 +178,45 @@ const readProducts1 = () => {
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static('public'));
-
 app.get('/', (req, res) => {
-  const products = readProducts1();
+  const allProducts = readProducts1(); // או readProducts אם אתה מעדיף
+  const ads = readAds();
+
   const page = parseInt(req.query.page) || 1;
   const itemsPerPage = 20;
 
-  const startIndex = (page - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  const search = (req.query.search || '').toLowerCase();
+  const brand = req.query.brand || '';
+  const category = req.query.category || '';
+  const price = req.query.price || '';
 
-  const paginatedProducts = products.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(products.length / itemsPerPage);
+  let filtered = allProducts.filter(p => {
+    return (
+      p.title.toLowerCase().includes(search) &&
+      (brand === '' || p.brand === brand) &&
+      (category === '' || p.category === category)
+    );
+  });
+
+  if (price === 'low') {
+    filtered.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+  } else if (price === 'high') {
+    filtered.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+  }
+
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const startIndex = (page - 1) * itemsPerPage;
+  const paginatedProducts = filtered.slice(startIndex, startIndex + itemsPerPage);
 
   res.render('index', {
     products: paginatedProducts,
     currentPage: page,
-    totalPages: totalPages
+    totalPages,
+    query: req.query,
+    ads // ⬅️ נשלח ל־index.ejs
   });
 });
+
 
 // דף פרטים למוצר
 app.get('/item/:id', (req, res) => {
@@ -209,11 +225,12 @@ app.get('/item/:id', (req, res) => {
   const product = products.find(p => p.id === productId);
 
   if (product) {
-    res.render('item', { product });
+    res.render('item', { product, products }); // הוספת products
   } else {
     res.status(404).send('ITEM NOT FOUND');
   }
 });
+
 // Serve static files (e.g., CSS, images, etc.)
 app.use(express.static('public'));
 
@@ -225,9 +242,7 @@ app.get('/contact.html', (req, res) => {
 app.get('/location.html', (req, res) => {
     res.render('location');
 });
-app.get('/', (req, res) => {
-    res.render('index');
-});
+
 
 app.get('/cart.html', (req, res) => {
     res.render('cart'); // ודא שיש לך קובץ cart.ejs (או cart.pug) בתיקיית views
@@ -235,9 +250,7 @@ app.get('/cart.html', (req, res) => {
 /**************************************** */
 
 // נתיב לדף הראשי
-app.get('/', (req, res) => {
-    res.render('index', { products });
-});
+
 //mail send - order information
 const nodemailer = require('nodemailer');
 
@@ -420,9 +433,58 @@ app.get('/api/get-orders', async (req, res) => {
         res.status(500).send('Error reading orders');
     }
 });
+/*************************************** */
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// קריאת המודעות
+function readAds() {
+  const data = fs.readFileSync('ads.json', 'utf8');
+  return JSON.parse(data);
+}
+
+// כתיבת המודעות
+function writeAds(ads) {
+  fs.writeFileSync('ads.json', JSON.stringify(ads, null, 2));
+}
 
 
+// דף ניהול מודעות
 
+
+app.get('/admin', isAuthenticated, (req, res) => {
+  const ads = readAds();
+  res.render('admin_panel', { ads }); // מרנדר את admin_panel.ejs מתיקיית views
+});
+
+
+// הוספת מודעה
+app.post('/add-ad', (req, res) => {
+  const { newAd } = req.body;
+  if (newAd && newAd.trim() !== "") {
+    const ads = readAds();
+    ads.push(newAd.trim());
+    writeAds(ads);
+  }
+  res.redirect('/admin');
+});
+
+// מחיקת מודעה לפי אינדקס
+app.post('/delete-ad', (req, res) => {
+  const { index } = req.body;
+  const ads = readAds();
+  if (index >= 0 && index < ads.length) {
+    ads.splice(index, 1);
+    writeAds(ads);
+  }
+  res.redirect('/admin');
+});
+
+/************************************** */
+
+
+/********************************** */
 // הפעלת השרת
 app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');

@@ -9,6 +9,109 @@ html, body {
   min-height: 100%;
 }
 
+.subscription {
+  background-image: url(../imgs/subscribe.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  margin-top: 4%;
+}
+
+.subscription__wrapper {
+  min-height: 448px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+}
+.subscription__contorls {
+  text-align: center;
+  margin: 10px 0;
+}
+.subscription__img {
+  width: 22%;
+  height: 22%;
+  margin: 0 0 30px;
+  margin-right: 21%;
+  
+}
+.subscription__text {
+  width: 80%;
+  font-size: 25px;
+  line-height: 24px;
+  color: #000000a1;
+}
+
+
+
+
+.subscription__form {
+  width: 557px;
+  text-align: center;
+}
+
+.subscription__form-heading {
+  font-size: 39px;
+  line-height: 38px;
+  font-weight: 700;
+  font-style: normal;
+  text-transform: uppercase;
+  margin-bottom: 5%;
+}
+
+.subscription__form-text {
+  text-transform: uppercase;
+  font-size: 18px;
+  line-height: 30px;
+  margin: 0 0 32px;
+  color: #000000a1;
+}
+
+.subscription__form-inner {
+  display: flex;
+  justify-content: center;
+}
+
+.subscription__form-input::-webkit-input-placeholder {
+  opacity: 0.67;
+}
+
+.subscription__form-input::-moz-placeholder {
+  opacity: 0.67;
+}
+
+.subscription__form-input:-moz-placeholder {
+  opacity: 0.67;
+}
+
+.subscription__form-input:-ms-input-placeholder {
+  opacity: 0.67;
+}
+
+.subscription__form-input {
+  width: 256px;
+  min-height: 49px;
+  background: #E1E1E1;
+  border: none;
+  border-radius: 20px 0 0 20px;
+  font-size: 14px;
+  line-height: 17px;
+  font-weight: 400;
+  font-style: normal;
+  padding: 0 0 0 22px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.subscription__form-input:hover {
+  opacity: 0.75;
+}
+
+.subscription__form-input:focus {
+  border: 1px solid #F16D7F;
+  outline: none;
+}
+
 /*************************/
 .fixed-cart {
   position: fixed;
@@ -163,13 +266,19 @@ h1 strong {
 .women {
   background-color: rgba(199, 193, 76, 0.162);
 }
+
 .shop-items {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 14px;
+  gap: 10px;
   justify-items: center;
   padding: 10px;
   box-sizing: border-box;
+}
+
+#item-price1{
+  text-align: center;
+  color: #bc4040;
 }
 
 .shop-item {
@@ -198,13 +307,13 @@ h1 strong {
 
 .shop-item-image {
   width: 100%;
-  height: 70%;
+  height: 95%;
   object-fit: cover;
   cursor: pointer;
 }
 
 .shop-item-title {
-  margin-top: 7%;
+  margin-top: 1%;
   margin-bottom: -2%;
   font-size: 1em;
   color: #000000;

@@ -101,3 +101,6 @@ addItemForm.addEventListener('submit', (e) => {
     // טען את הפריטים בהתחלה
     loadItems();
 });
+
+
+

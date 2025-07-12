@@ -29,6 +29,53 @@
         </nav>
     </header>
 
+<div class="ad-carousel" id="adCarouselTop">
+  <% ads.forEach((ad, index) => { %>
+    <div class="ad-slide <%= index === 0 ? 'active' : '' %>"><%= ad %></div>
+  <% }) %>
+  <div class="carousel-buttons">
+    <button class="carousel-button" onclick="prevSlideTop()">‹</button>
+    <button class="carousel-button" onclick="nextSlideTop()">›</button>
+  </div>
+</div>
+
+<script>
+    function setupCarousel(carouselId, prevFnName, nextFnName) {
+    const allSlides = document.querySelectorAll(`#${carouselId} .ad-slide`);
+    const slides = Array.from(allSlides).filter(slide => slide.textContent.trim().length > 0);
+    let currentSlide = 0;
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => slide.classList.remove('active'));
+      slides[index].classList.add('active');
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(currentSlide);
+    }
+
+    // התחלה
+    showSlide(currentSlide);
+    setInterval(nextSlide, 4000);
+
+    // חשיפת הפונקציות
+    window[prevFnName] = prevSlide;
+    window[nextFnName] = nextSlide;
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    setupCarousel("adCarouselTop", "prevSlideTop", "nextSlideTop");
+    setupCarousel("adCarouselBottom", "prevSlideBottom", "nextSlideBottom");
+  });
+</script>
+
+
 <!-- Search and Filter -->
 <div class="filter-container">
     <input type="text" id="searchInput" placeholder="חפש לפי שם מוצר..." />
@@ -61,8 +108,8 @@
       <div class="shop-item-image-container">
         <img class="shop-item-image" src="/images/<%= product.images[0] %>" alt="<%= product.title %>" onclick="location.href='/item/<%= product.id %>'">
       </div>
-      <span class="shop-item-title"><%= product.title %></span>
-      <p class="shop-item-price"><b>₪<%= product.price %></b></p>
+      <span onclick="location.href='/item/<%= product.id %>'" class="shop-item-title"><%= product.title %></span>
+      <p class="shop-item-price">₪<%= product.price %></p>
       <span class="shop-item-new">NEW</span>
 
       <!-- כפתור עם אייקון סל -->
@@ -78,17 +125,56 @@
 
   <!-- פאגינציה -->
   <div class="pagination">
-    <% for (let i = 1; i <= totalPages; i++) { %>
-      <% if (i === currentPage) { %>
-        <span class="current-page"><%= i %></span>
-      <% } else { %>
-        <a href="/?page=<%= i %>"><%= i %></a>
-      <% } %>
+  <% for (let i = 1; i <= totalPages; i++) { %>
+    <% if (i === currentPage) { %>
+      <span class="current-page"><%= i %></span>
+    <% } else { %>
+      <a href="#" class="pagination-link" data-page="<%= i %>"><%= i %></a>
     <% } %>
-  </div>
+  <% } %>
+</div>
+
 </section>
 
-    
+    <div class="ad-carousel" id="adCarouselBottom">
+  <% ads.forEach((ad, index) => { %>
+    <div class="ad-slide <%= index === 0 ? 'active' : '' %>"><%= ad %></div>
+  <% }) %>
+  <div class="carousel-buttons">
+    <button class="carousel-button" onclick="prevSlideBottom()">‹</button>
+    <button class="carousel-button" onclick="nextSlideBottom()">›</button>
+  </div>
+</div>
+
+
+<section class="subscription">
+                <div class="container subscription__wrapper">
+                    <h2 class="visually-hidden">
+                       
+                    </h2>
+                    <div class="subscription__contorls">
+                        <img class="subscription__img" src="./imgs/smile-woman.png" alt="Photo" width="96" height="96">
+                        <p class="subscription__text">
+                            מותגים מקוריים, איכות פרימיום, משלוח חינם <span
+                                class="subscription__text">💥 המבצעים החמים מחכים לך באתר!</span>
+                        </p>
+                    </div>
+                    <form action="#" class="subscription__form">
+                        <h3 class="subscription__form-heading">
+                            צור קשר
+                        </h3>
+                        <p class="subscription__form-text">
+                           הצוות שלנו זמין בשבילך לכל שאלה, בקשה או בעיה.
+אל תהסס לפנות אלינו – נשמח לעזור!
+📱 טלפון/וואטסאפ: [0545293636]
+📍<br> פעילות: א'-ה' 09:00–18:00
+
+</p>
+                       
+                    </form>
+                </div>
+            </section>
+
 
     <div class="fixed-cart">
         <a href="cart.html">
@@ -96,6 +182,8 @@
         </a>
     </div>
 
+
+    
     <footer class="main-footer">
         <div class="container main-footer-container">
             <h3 class="band-name text-center">Marwa Fashion Store</h3>
@@ -124,6 +212,52 @@
 </html>
 
 <style> 
+ .ad-carousel {
+      width: 100%;
+      background-color: #0b0b0ba7;
+      overflow: hidden;
+      position: relative;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ad-slide {
+      display: none;
+      text-align: center;
+      font-size: 18px;
+      color: #ffffff;
+      padding: 10px 20px;
+    }
+
+    .ad-slide.active {
+      display: block;
+    }
+
+    .carousel-buttons {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 85%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 10px;
+    }
+
+    .carousel-button {
+      background-color: rgba(0, 0, 0, 0.2);
+      color: white;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+
+    .carousel-button:hover {
+      background-color: rgba(255, 255, 255, 0.4);
+    }
 .pagination {
   display: flex;
   justify-content: center;
@@ -355,7 +489,7 @@
     max-width: 1000px;
     margin: 30px auto;
     padding: 25px;
-    background: linear-gradient(to left, #ffffff, #f6f6f6);
+    background: linear-gradient(to left, #b6a3a3, #f6f6f6);
     border-radius: 16px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     display: flex;
@@ -443,11 +577,12 @@
             <div class="shop-item">
                 
                 <img class="shop-item-image" src="/images/${product.images[0]}" alt="${product.title}" onclick="location.href='/item/${product.id}'">
-                                <span class="shop-item-title">${product.title}</span>
+                                <span class="shop-item-title" onclick="location.href='/item/${product.id}'" >${product.title}</span>
 
                 <p class="shop-item-price"> ₪${product.price} </p>
 
                       <span class="shop-item-new">NEW</span>
+\
 
                         <button class="add-to-cart-btn" onclick="addToCart(${product.id})"
 " title="הוסף לסל">
@@ -501,86 +636,49 @@ function addToCart(productId) {
     alert("המוצר נוסף לסל!");
 }
 
-
-    // סינון
-    function applyFilters() {
-        const search = document.getElementById('searchInput').value.toLowerCase();
-        const brand = document.getElementById('brandFilter').value;
-        const category = document.getElementById('categoryFilter').value;
-        const priceSort = document.getElementById('priceFilter').value;
-
-        let filtered = allProducts.filter(p => {
-            return (
-                p.title.toLowerCase().includes(search) &&
-                (brand === "" || p.brand === brand) &&
-                (category === "" || p.category === category)
-            );
-        });
-
-        // מיון לפי מחיר
-        if (priceSort === "low") {
-            filtered.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-        } else if (priceSort === "high") {
-            filtered.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-        }
-
-        renderItems(filtered);
-    }
-
-    // מאזינים לשדות הסינון
-    document.getElementById('searchInput').addEventListener('input', applyFilters);
-    document.getElementById('brandFilter').addEventListener('change', applyFilters);
-    document.getElementById('categoryFilter').addEventListener('change', applyFilters);
-    document.getElementById('priceFilter').addEventListener('change', applyFilters);
-
-    // רנדר ראשוני
-    renderItems(allProducts);
-
-
-
-
-    // עדכון כותרת דינמית לפי קטגוריה
-const sectionTitle = document.getElementById('sectionTitle');
-if (category) {
-    sectionTitle.textContent = category;
-} else {
-    sectionTitle.textContent = ''; // ריק אם נבחר "כל הקבוצות"
-}
-
-
-
-function applyFilters() {
-    const search = document.getElementById('searchInput').value.toLowerCase();
+  function applyFilters(page = 1) {
+    const search = document.getElementById('searchInput').value;
     const brand = document.getElementById('brandFilter').value;
     const category = document.getElementById('categoryFilter').value;
-    const priceSort = document.getElementById('priceFilter').value;
+    const price = document.getElementById('priceFilter').value;
 
-    let filtered = allProducts.filter(p => {
-        return (
-            p.title.toLowerCase().includes(search) &&
-            (brand === "" || p.brand === brand) &&
-            (category === "" || p.category === category)
-        );
+    const params = new URLSearchParams({
+      page,
+      search,
+      brand,
+      category,
+      price
     });
 
-    // מיון לפי מחיר
-    if (priceSort === "low") {
-        filtered.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-    } else if (priceSort === "high") {
-        filtered.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-    }
+    window.location.href = `/?${params.toString()}`;
+  }
 
-    // עדכון כותרת
-    const sectionTitle = document.getElementById('sectionTitle');
-    if (category) {
-        sectionTitle.textContent = category;
-    } else {
-        sectionTitle.textContent = '';
-    }
+  // האזנה לשינויים
+document.getElementById('searchInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    applyFilters();
+  }
+});
+  document.getElementById('brandFilter').addEventListener('change', () => applyFilters());
+  document.getElementById('categoryFilter').addEventListener('change', () => applyFilters());
+  document.getElementById('priceFilter').addEventListener('change', () => applyFilters());
 
-    renderItems(filtered);
-}
+  // פאגינציה - שמירת פילטרים בלחיצה
+  document.querySelectorAll('.pagination-link').forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      const page = this.dataset.page;
+      applyFilters(page);
+    });
+  });
 
-
+  // מילוי השדות לפי URL
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById('searchInput').value = params.get('search') || '';
+    document.getElementById('brandFilter').value = params.get('brand') || '';
+    document.getElementById('categoryFilter').value = params.get('category') || '';
+    document.getElementById('priceFilter').value = params.get('price') || '';
+  });
 
 </script>
