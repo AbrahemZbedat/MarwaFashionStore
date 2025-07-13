@@ -90,6 +90,10 @@ function readProducts() {
 
 
 
+app.get('/products', (req, res) => {
+    const products = readProducts(); // או readProducts1()
+    res.json(products);
+});
 
 
 
