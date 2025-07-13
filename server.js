@@ -10,6 +10,14 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.static('public')); // להגיש את קבצי ה-HTML
 
+
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// פונקציה לקרוא את הקובץ JSON
+
+
 // הגדרת session
 app.use(session({
     secret: '123', // שנה למפתח סודי כלשהו
@@ -47,10 +55,11 @@ app.get('/admin-orders.html', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'private', 'admin-orders.html')); // הגיש את הקובץ המוגן מהתיקייה 'private'
 });
 
-app.get('/admin_panel.html', isAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, 'private', 'admin_panel.html')); // הגיש את הקובץ המוגן מהתיקייה 'private'
+app.get('/admin_panel', isAuthenticated, (req, res) => {
+    const ads = readAds();
+    const products = readProducts();
+    res.render('admin_panel', { ads, products });
 });
-
 
 
 
@@ -81,11 +90,6 @@ function readProducts() {
 
 
 
-
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-// פונקציה לקרוא את הקובץ JSON
 
 
 
@@ -174,6 +178,8 @@ const readProducts1 = () => {
   // לדוגמה: החזר מערך של מוצרים
   return require('./products.json'); // אתה יכול להתאים את זה בהתאם למבנה שלך
 };
+
+
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));

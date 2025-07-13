@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const deleteItemForm = document.getElementById('deleteItemForm');
 
     // פונקציה לטעינת הפריטים הקיימים
+    
     function loadItems() {
         fetch('/products')
             .then(response => response.json())

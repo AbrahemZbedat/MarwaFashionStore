@@ -391,5 +391,23 @@
     "images": [
       "1752062954378.jpg"
     ]
+  },
+  {
+    "id": 44,
+    "title": "bbxxxxxxxxxxx",
+    "price": "199.90",
+    "sizes": [
+      "L",
+      "M",
+      "S"
+    ],
+    "colors": [
+      "Red"
+    ],
+    "brand": "NIKE",
+    "category": "T-SHIRT",
+    "images": [
+      "1752340971076.jpg"
+    ]
   }
 ]
